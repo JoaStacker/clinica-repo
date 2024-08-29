@@ -1,0 +1,45 @@
+version: '3.4'
+
+# networks:
+#   networkclinica:
+
+services:
+
+  database_service:
+    container_name: clinica_db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 8002:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=password@12345#
+    # networks:
+    #   - networkclinica
+
+  backend_app:
+    container_name: clinica_api
+    build:
+      context: .
+      dockerfile: Dockerfile.backend_app
+    ports:
+      - 8001:80
+    depends_on:
+      - database_service
+    environment:
+      - DB_HOST=dbclinica
+      - DB_NAME=ClinicaApp
+      - DB_SA_PASSWORD=password@12345#
+    # networks:
+    #   - networkclinica
+
+  flutter_app:
+    container_name: clinica_frontend
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend_app
+    ports:
+      - 5000:5000
+    depends_on:
+      - backend_app
+    environment:
+      - FLUTTER_WEB_PORT=5000
