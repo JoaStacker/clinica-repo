@@ -1,3 +1,5 @@
+# TODO hacer que levante SOLO el dockerfile, sin docker compose primero.
+
 # Use Ubuntu as a base image
 FROM ubuntu:20.04
 
