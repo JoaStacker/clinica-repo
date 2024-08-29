@@ -1,0 +1,53 @@
+# TODO hacer que levanto el Dockerfile.
+
+# Use Ubuntu as a base image
+FROM ubuntu:20.04
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    curl \
+    unzip \
+    git \
+    xz-utils \
+    zip \
+    bash
+
+# Create a non-root user and set up environment
+RUN useradd -ms /bin/bash flutteruser
+USER flutteruser
+WORKDIR /home/flutteruser
+
+# Create development directory
+RUN mkdir -p /home/flutteruser/development
+
+# Download and install Flutter SDK for Linux
+RUN curl -fsSL https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.1-stable.tar.xz -o flutter.tar.xz && \
+    tar xf flutter.tar.xz -C /home/flutteruser/development && \
+    rm flutter.tar.xz
+
+# Add Flutter to PATH
+ENV PATH="/home/flutteruser/development/flutter/bin:${PATH}"
+
+
+# Install Flutter dependencies
+RUN flutter doctor
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the pubspec files and install dependencies
+COPY clinica_front/pubspec.* ./
+RUN flutter pub get
+
+# Copy the rest of the application code
+COPY clinica_front/ ./
+
+# Build the app (optional; adjust according to your build needs)
+# RUN flutter build web
+
+# Expose the port the app will run on
+EXPOSE 5000
+
+# Start the Flutter development server (adjust if needed)
+CMD ["flutter", "run", "-d", "web-server", "--web-port=5000"]
