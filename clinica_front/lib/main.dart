@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-const BASE_URL = 'http://localhost:8001'
+const BASE_URL = 'http://localhost:8001';
 
 void main() => runApp(MyApp());
 
