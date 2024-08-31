@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+const BASE_URL = 'http://localhost:8001'
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -29,7 +31,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   Future<void> fetchWeatherData() async {
-    final url = Uri.parse('http://localhost:8001/weatherforecast');
+    final url = Uri.parse((BASE_URL) + '/weatherforecast');
     try {
       final response = await http.get(url);
 

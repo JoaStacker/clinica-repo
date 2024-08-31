@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: Dockerfile.backend_app
     ports:
-      - 8001:80
+      - 8001:8080
     depends_on:
       - database_service
     environment:
