@@ -1,9 +1,9 @@
+import 'package:clinica_front/ui/pages/home/home_page.dart';
 import 'package:clinica_front/ui/pages/login/login_page.dart';
-import 'package:flutter/material.dart';
 
 final routes = {
   '/login': (context) => const LoginPage(),
-  '/home': (context) => Container()
+  '/home': (context) => HomePage()
 /*
   '/results': (context) {
       final args = ModalRoute.of(context)!.settings.arguments as ResultadoSuela;
