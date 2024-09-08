@@ -81,9 +81,10 @@ class LoginScreen extends StatelessWidget {
           ),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
+                backgroundColor: kPrimaryColor,
                 fixedSize: Size(size.width, 60),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-            onPressed: null,
+            onPressed: () => viewModel.navigatorPush(context, '/home'),
             child: Text('INICIAR SESIÓN', style: textTitle)),
         ),
       ],
