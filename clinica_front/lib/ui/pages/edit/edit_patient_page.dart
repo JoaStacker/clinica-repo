@@ -7,10 +7,11 @@ class EditPatientPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return ScreenTypeLayout.builder(
-      mobile: (BuildContext context) => EditPatientCommonWidget(),
-      tablet: (BuildContext context) => EditPatientCommonWidget(),
-      desktop: (BuildContext context) => EditPatientCommonWidget(),
+      mobile: (BuildContext context) => EditPatientCommonWidget(width: width * 0.05),
+      tablet: (BuildContext context) => EditPatientCommonWidget(width: width * 0.1),
+      desktop: (BuildContext context) => EditPatientCommonWidget(width: width * 0.2),
     );
   }
 }
