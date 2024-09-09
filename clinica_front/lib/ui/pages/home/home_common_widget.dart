@@ -32,7 +32,7 @@ class HomeScreenDesktop extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _patientSearchBar(viewModel),
-                      _addPatient('AÑADIR PACIENTE', width)
+                      _addPatient('AÑADIR PACIENTE', width, viewModel, context)
                     ],
                   ),
                 ),
@@ -89,7 +89,7 @@ class HomeScreenTablet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _patientSearchBar(viewModel),
-                      _addPatient('AÑADIR', width * 0.5)
+                      _addPatient('AÑADIR', width * 0.5, viewModel, context)
                     ],
                   ),
                 ),
@@ -121,15 +121,19 @@ class HomeScreenMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final width = size.width * 0.45;
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: AppBarClinica(size: size, width: width),
-      ),
-      floatingActionButton: FloatingActionButton(onPressed: null, backgroundColor: kPrimaryColor, child: Icon(Icons.add, color: kWhitePure)),
-      body: Consumer<HomeViewModel>(
-        builder: (BuildContext context, HomeViewModel viewModel, Widget? child) {
-          return Container(
+    return Consumer<HomeViewModel>(
+      builder: (BuildContext context, HomeViewModel viewModel, Widget? child) {
+        return Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(kToolbarHeight),
+            child: AppBarClinica(size: size, width: width),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => viewModel.navigatorPush(context, '/edit'),
+            backgroundColor: kPrimaryColor,
+            child: Icon(Icons.add, color: kWhitePure),
+          ),
+          body: Container(
             color: kLila20,
             child: Column(
               children: [
@@ -152,9 +156,9 @@ class HomeScreenMobile extends StatelessWidget {
                 SizedBox(height: 15),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -181,12 +185,12 @@ Expanded _pattientList(Widget body) {
   );
 }
 
-ElevatedButton _addPatient(String title, double width){
+ElevatedButton _addPatient(String title, double width, HomeViewModel viewModel, BuildContext context){
   return ElevatedButton(
     style: ElevatedButton.styleFrom(
         backgroundColor: kPrimaryColor,
         fixedSize: Size(width, 45),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-    onPressed: null,
+    onPressed: () => viewModel.navigatorPush(context, '/edit'),
     child: Text(title, style: textTitle, overflow: TextOverflow.ellipsis));
 }
