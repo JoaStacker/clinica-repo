@@ -68,7 +68,11 @@ class EditPatientCommonWidget extends StatelessWidget {
                 InputWhite(
                   labelText: 'Nombre: ',
                   initString: '',
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.text, 
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(30),
+                    FilteringTextInputFormatter.allow(RegExp('[a-z A-Z]')),
+                  ],
                   enable: true,
                   onChanged: null,
                 ),
@@ -76,7 +80,11 @@ class EditPatientCommonWidget extends StatelessWidget {
                 InputWhite(
                   labelText: 'Apellido: ',
                   initString: '',
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.text,                  
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(20),
+                    FilteringTextInputFormatter.allow(RegExp('[a-z A-Z]')),
+                  ],
                   enable: true,
                   onChanged: null,
                 ),
@@ -84,8 +92,11 @@ class EditPatientCommonWidget extends StatelessWidget {
                 InputWhite(
                   labelText: 'DNI: ',
                   initString: '',
-                  keyboardType: TextInputType.text,
-                  inputFormatters: [LengthLimitingTextInputFormatter(9)],
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(9),                    
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
                   enable: true,
                   onChanged: null,
                 ),
@@ -93,8 +104,8 @@ class EditPatientCommonWidget extends StatelessWidget {
                 InputWhite(
                   labelText: 'Fecha de nacimiento: ',
                   initString: '',
-                  keyboardType: TextInputType.number,
                   hintText: 'dd/mm/yyyy',
+                  keyboardType: TextInputType.number,
                   inputFormatters: [viewModel.birthdayFormatter],
                   validator: (date) => viewModel.birthDayValidator(date),
                   onChanged: null,
@@ -104,6 +115,10 @@ class EditPatientCommonWidget extends StatelessWidget {
                   labelText: 'Direccion: ',
                   initString: '',
                   keyboardType: TextInputType.text,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(120),
+                    FilteringTextInputFormatter.allow(RegExp('[a-z A-Z]')),
+                  ],
                   enable: true,
                   onChanged: null,
                 ),
@@ -112,6 +127,10 @@ class EditPatientCommonWidget extends StatelessWidget {
                   labelText: 'Obra Social: ',
                   initString: '',
                   keyboardType: TextInputType.text,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(30),
+                    FilteringTextInputFormatter.allow(RegExp('[a-z A-Z]')),
+                  ],
                   enable: true,
                   onChanged: null,
                 ),
@@ -120,7 +139,10 @@ class EditPatientCommonWidget extends StatelessWidget {
                   labelText: 'Nro de afiliado: ',
                   initString: '',
                   keyboardType: TextInputType.number,
-                  inputFormatters: [LengthLimitingTextInputFormatter(20)],
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(30),                    
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
                   enable: true,
                   onChanged: null,
                 ),
