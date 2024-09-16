@@ -1,3 +1,6 @@
+using Dominio.Entidades;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseUrls("http://*:80"); // Bind to port 8080
@@ -8,13 +11,26 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-/* Database Context Dependency Injection */
+/* 
+// Database Context Dependency Injection con variables de entorno.
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
 var dbName = Environment.GetEnvironmentVariable("DB_NAME");
 var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
 var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword}";
-// builder.Services.AddDbContext<DatabaseContext>(opt => opt.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ClinicaContext>(opt => opt.UseSqlServer(connectionString));
+*/
+
+// Database Context Dependency Injection con connection string directo.
+builder.Services.AddDbContext<ClinicaContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("ClinicaConnection")));
+
 var app = builder.Build();
+
+// Al momento de iniciar el proyecto se ejecuta la migracion por si tengo nuevos cambios.
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ClinicaContext>();
+    context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
