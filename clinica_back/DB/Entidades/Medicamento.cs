@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace Dominio.Entidades
+namespace Clinica.Dominio.Entidades
 {
-    public class Medicamento
+    public class Medicamento: EntidadBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

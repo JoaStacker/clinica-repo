@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dominio.Entidades
+namespace Clinica.Dominio.Entidades
 {
-    public class Direccion
+    public class Direccion: EntidadBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

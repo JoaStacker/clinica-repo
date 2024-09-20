@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dominio.Entidades
+namespace Clinica.Dominio.Entidades
 {
-    public class HistoriaClinica
+    public class HistoriaClinica: EntidadBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

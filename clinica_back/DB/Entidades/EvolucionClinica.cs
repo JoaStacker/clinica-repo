@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Dominio.Entidades
+namespace Clinica.Dominio.Entidades
 {
-    public class EvolucionClinica
+    public class EvolucionClinica: EntidadBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,16 +16,11 @@ namespace Dominio.Entidades
         [Column("fecha_creacion")]
         public DateTime FechaDeCreacion { get; set; }
 
-        [ForeignKey("Medico")]
-        [Column("medico_id")]
-        public int MedicoID { get; set; }
-
         [ForeignKey("Diagnostico")]
         [Column("diagnostico_id")]
         public int DiagnosticoID { get; set; }
 
         // Navigation properties
-        public virtual Medico Medico { get; set; }
         public virtual Diagnostico Diagnostico { get; set; }
     }
 }

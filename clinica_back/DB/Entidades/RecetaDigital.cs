@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Dominio.Enumeraciones;
+using Clinica.Dominio.Enumeraciones;
 
-namespace Dominio.Entidades
+namespace Clinica.Dominio.Entidades
 {
-    public class RecetaDigital
+    public class RecetaDigital: EntidadBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -35,8 +35,8 @@ namespace Dominio.Entidades
         public int EvolucionClinicaID { get; set; }
 
         // Navigation properties
-        public virtual EvolucionClinica EvolucionClinica { get; set; }
         public virtual Medico Medico { get; set; }
+        public virtual EvolucionClinica EvolucionClinica { get; set; }
         public virtual ICollection<Medicamento> Medicamentos { get; set; } = new List<Medicamento>();
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "36hsCZHC96ZQUugue+OMqNzH+I7gzpVIunFibxRs+bhMnivppIos07jlwrmmQvzDaO4Nf6JlhO1XyEmB9CJqQg==",
+  "dgSpecHash": "yLy478mZ8o7npDUTsxR6JN+Pz9QHahp03lCluy20ki2QBqwqm4fxoNc83+y1rEKw0r4AWDRSgya0jQZr69Mccg==",
   "success": true,
-  "projectFilePath": "D:\\IngSoft\\clinica-repo\\clinica_back\\DB\\Dominio.csproj",
+  "projectFilePath": "D:\\IngSoft\\clinica-repo\\clinica_back\\DB\\Clinica.Dominio.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\joess\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\joess\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

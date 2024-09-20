@@ -1,0 +1,12 @@
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\bin\Debug\net8.0\Clinica.Infraestructura.Transversal.deps.json
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\bin\Debug\net8.0\Clinica.Infraestructura.Transversal.dll
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\bin\Debug\net8.0\Clinica.Infraestructura.Transversal.pdb
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\obj\Debug\net8.0\Clinica.Infraestructura.Transversal.GeneratedMSBuildEditorConfig.editorconfig
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\obj\Debug\net8.0\Clinica.Infraestructura.Transversal.AssemblyInfoInputs.cache
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\obj\Debug\net8.0\Clinica.Infraestructura.Transversal.AssemblyInfo.cs
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\obj\Debug\net8.0\Clinica.Infraestructura.Transversal.csproj.CoreCompileInputs.cache
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\obj\Debug\net8.0\Clinica.Infraestructura.Transversal.sourcelink.json
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\obj\Debug\net8.0\Clinica.Infraestructura.Transversal.dll
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\obj\Debug\net8.0\refint\Clinica.Infraestructura.Transversal.dll
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\obj\Debug\net8.0\Clinica.Infraestructura.Transversal.pdb
+D:\IngSoft\clinica-repo\clinica_back\Clinica.Infraestructura.Transversal\obj\Debug\net8.0\ref\Clinica.Infraestructura.Transversal.dll
