@@ -1,53 +1,31 @@
-# TODO hacer que levanto el Dockerfile.
+# Stage 1
+FROM debian:latest AS build-env
 
-# Use Ubuntu as a base image
-FROM ubuntu:20.04
+RUN apt-get update 
+RUN apt-get install -y curl git wget unzip libgconf-2-4 gdb libstdc++6 libglu1-mesa fonts-droid-fallback lib32stdc++6 python3
+RUN apt-get clean
 
-# Install dependencies
-RUN apt-get update && \
-    apt-get install -y \
-    curl \
-    unzip \
-    git \
-    xz-utils \
-    zip \
-    bash
+RUN git clone https://github.com/flutter/flutter.git /usr/local/flutter
 
-# Create a non-root user and set up environment
-RUN useradd -ms /bin/bash flutteruser
-USER flutteruser
-WORKDIR /home/flutteruser
+ENV PATH="/usr/local/flutter/bin:/usr/local/flutter/bin/cache/dart-sdk/bin:${PATH}"
 
-# Create development directory
-RUN mkdir -p /home/flutteruser/development
+RUN flutter doctor -v
 
-# Download and install Flutter SDK for Linux
-RUN curl -fsSL https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.1-stable.tar.xz -o flutter.tar.xz && \
-    tar xf flutter.tar.xz -C /home/flutteruser/development && \
-    rm flutter.tar.xz
+RUN flutter channel master
+RUN flutter upgrade
+RUN flutter config --enable-web
 
-# Add Flutter to PATH
-ENV PATH="/home/flutteruser/development/flutter/bin:${PATH}"
+RUN mkdir /app/
+COPY clinica_front/. /app/
+WORKDIR /app/
+RUN flutter build web --release --web-renderer html
 
+# Stage 2
+FROM nginx:1.21.1-alpine
+COPY --from=build-env /app/build/web /usr/share/nginx/html
 
-# Install Flutter dependencies
-RUN flutter doctor
+# Add custom Nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Set the working directory
-WORKDIR /app
-
-# Copy the pubspec files and install dependencies
-COPY clinica_front/pubspec.* ./
-RUN flutter pub get
-
-# Copy the rest of the application code
-COPY clinica_front/ ./
-
-# Build the app (optional; adjust according to your build needs)
-# RUN flutter build web
-
-# Expose the port the app will run on
+# EXPOSE <EXPOSE PORT THAT YOU WANT>
 EXPOSE 5000
-
-# Start the Flutter development server (adjust if needed)
-CMD ["flutter", "run", "-d", "web-server", "--web-port=5000"]
