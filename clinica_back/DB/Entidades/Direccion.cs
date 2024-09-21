@@ -8,7 +8,7 @@ namespace Clinica.Dominio.Entidades
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("direccion_id")]
-        public int DireccionID { get; set; }
+        public int DireccionID { get; set; }  // Made private to prevent external modification
 
         [Column("provincia")]
         public string Provincia { get; set; }
