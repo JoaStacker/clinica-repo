@@ -22,9 +22,9 @@ namespace Clinica.Api.Services
         {
             try
             {
-                IEnumerable<Paciente> pacientes = _repositorioPaciente.GetTodos();
+                IEnumerable<Paciente> pacientes = _repositorioPaciente.GetConFiltro(p => p.Persona.Dni == pacienteDto.Dni);
 
-                if (pacientes.Any(p => p.Persona.Dni == pacienteDto.Dni))
+                if (pacientes.Any())
                 {
                     return new ServiceResponse(
                         false,
