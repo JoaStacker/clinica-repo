@@ -14,6 +14,7 @@ namespace Clinica.Dominio.Entidades
         public int Matricula { get; set; }
 
         [Column("especialidad")]
+        [MaxLength(100)]
         public string Especialidad { get; set; }
 
         [ForeignKey("Persona")]

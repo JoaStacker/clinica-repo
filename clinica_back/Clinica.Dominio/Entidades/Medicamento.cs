@@ -11,6 +11,7 @@ namespace Clinica.Dominio.Entidades
         public int MedicamentoID { get; set; }
 
         [Column("codigo")]
+        [MaxLength(45)]
         public string Codigo { get; set; }
 
         [Column("nombre_comercial")]
