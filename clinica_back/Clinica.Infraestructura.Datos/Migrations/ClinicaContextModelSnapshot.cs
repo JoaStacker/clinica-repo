@@ -36,7 +36,8 @@ namespace Clinica.Infraestructura.Datos.Migrations
 
                     b.Property<string>("Enfermedad")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("enfermedad");
 
                     b.Property<DateTime>("FechaDeCreacion")
@@ -49,7 +50,8 @@ namespace Clinica.Infraestructura.Datos.Migrations
 
                     b.Property<string>("Observaciones")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
                         .HasColumnName("observaciones");
 
                     b.HasKey("DiagnosticoID");

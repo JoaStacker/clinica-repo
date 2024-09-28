@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clinica.Infraestructura.Datos.Migrations
 {
     [DbContext(typeof(ClinicaContext))]
-    [Migration("20240921032258_nllhc")]
-    partial class nllhc
+    [Migration("20240928014758_mig-001")]
+    partial class mig001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,7 +52,8 @@ namespace Clinica.Infraestructura.Datos.Migrations
 
                     b.Property<string>("Observaciones")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
                         .HasColumnName("observaciones");
 
                     b.HasKey("DiagnosticoID");

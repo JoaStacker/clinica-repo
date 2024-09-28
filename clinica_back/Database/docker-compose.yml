@@ -1,0 +1,25 @@
+version: '3.6'
+
+services:
+
+  database_service_local:
+    container_name: clinica-db-local
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    command: /bin/bash /entrypoint.sh
+    ports:
+      - 8002:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=password@12345#
+    volumes:
+      - ./docker-entrypoint.sh:/entrypoint.sh
+      - ./docker-db-init.sh:/db-init.sh
+      - ./clinica-db-init.sql:/clinica-db-init.sql
+    networks:
+      - my-proxy-net
+
+    
+networks:
+  my-proxy-net:
+    external:
+      name: clinica_network

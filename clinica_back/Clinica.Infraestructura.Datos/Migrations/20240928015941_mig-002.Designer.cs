@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clinica.Infraestructura.Datos.Migrations
 {
     [DbContext(typeof(ClinicaContext))]
-    [Migration("20240920024230_nullable field")]
-    partial class nullablefield
+    [Migration("20240928015941_mig-002")]
+    partial class mig002
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,9 @@ namespace Clinica.Infraestructura.Datos.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -36,7 +39,8 @@ namespace Clinica.Infraestructura.Datos.Migrations
 
                     b.Property<string>("Enfermedad")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("enfermedad");
 
                     b.Property<DateTime>("FechaDeCreacion")
@@ -49,7 +53,8 @@ namespace Clinica.Infraestructura.Datos.Migrations
 
                     b.Property<string>("Observaciones")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
                         .HasColumnName("observaciones");
 
                     b.HasKey("DiagnosticoID");
@@ -230,6 +235,10 @@ namespace Clinica.Infraestructura.Datos.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_defuncion");
 
+                    b.Property<int?>("HistoriaClinicaID")
+                        .HasColumnType("int")
+                        .HasColumnName("historia_clinica_id");
+
                     b.Property<int>("NroAfiliado")
                         .HasColumnType("int")
                         .HasColumnName("nro_afiliado");
@@ -244,6 +253,8 @@ namespace Clinica.Infraestructura.Datos.Migrations
                         .HasColumnName("persona_id");
 
                     b.HasKey("PacienteID");
+
+                    b.HasIndex("HistoriaClinicaID");
 
                     b.HasIndex("PersonaID");
 
@@ -438,11 +449,17 @@ namespace Clinica.Infraestructura.Datos.Migrations
 
             modelBuilder.Entity("Clinica.Dominio.Entidades.Paciente", b =>
                 {
+                    b.HasOne("Clinica.Dominio.Entidades.HistoriaClinica", "HistoriaClinica")
+                        .WithMany()
+                        .HasForeignKey("HistoriaClinicaID");
+
                     b.HasOne("Clinica.Dominio.Entidades.Persona", "Persona")
                         .WithMany()
                         .HasForeignKey("PersonaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("HistoriaClinica");
 
                     b.Navigation("Persona");
                 });

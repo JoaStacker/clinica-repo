@@ -1,18 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure;
+using Clinica.Dominio.Contratos;
+using Clinica.Dominio.Entidades;
+using Microsoft.AspNetCore.Http;
 
 namespace Clinica.Api.Services
 {
     public class ServiceResponse
     {
-
-        public bool Ok { get; set; }
+        public ServiceStatus Status { get; set; }
         public int StatusCode { get; set; }
-        public string Error { get; set; }
-        public ServiceResponse(bool ok, int status_code, string error)
+        public string Message { get; set; }
+
+        public object? Content { get; set; } = null;
+
+        public ServiceResponse(ServiceStatus status, int statusCode, string message, object? content=null)
         {
-            Ok = ok;
-            StatusCode = status_code;
-            Error = error;
+            Status = status;
+            StatusCode = statusCode;
+            Message = message;
+            Content = content;
         }
     }
 }

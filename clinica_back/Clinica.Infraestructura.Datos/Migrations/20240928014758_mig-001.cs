@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Clinica.Infraestructura.Datos.Migrations
 {
     /// <inheritdoc />
-    public partial class test : Migration
+    public partial class mig001 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -75,7 +75,7 @@ namespace Clinica.Infraestructura.Datos.Migrations
                     diagnostico_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     enfermedad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    observaciones = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    observaciones = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     fecha_creacion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     historia_clinica_id = table.Column<int>(type: "int", nullable: false)
                 },
@@ -119,13 +119,19 @@ namespace Clinica.Infraestructura.Datos.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     nro_afiliado = table.Column<int>(type: "int", nullable: false),
                     pasaporte = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    fecha_defuncion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    fecha_defuncion = table.Column<DateTime>(type: "datetime2", nullable: true),
                     estado = table.Column<int>(type: "int", nullable: false),
-                    persona_id = table.Column<int>(type: "int", nullable: false)
+                    persona_id = table.Column<int>(type: "int", nullable: false),
+                    historia_clinica_id = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_pacientes", x => x.paciente_id);
+                    table.ForeignKey(
+                        name: "FK_pacientes_historias_clinicas_historia_clinica_id",
+                        column: x => x.historia_clinica_id,
+                        principalTable: "historias_clinicas",
+                        principalColumn: "historia_clinica_id");
                     table.ForeignKey(
                         name: "FK_pacientes_personas_persona_id",
                         column: x => x.persona_id,
@@ -265,6 +271,11 @@ namespace Clinica.Infraestructura.Datos.Migrations
                 name: "IX_medicos_persona_id",
                 table: "medicos",
                 column: "persona_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_pacientes_historia_clinica_id",
+                table: "pacientes",
+                column: "historia_clinica_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_pacientes_persona_id",

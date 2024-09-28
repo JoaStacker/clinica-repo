@@ -5,7 +5,7 @@ namespace Clinica.Api.Services
 {
     public interface IPacienteServicio
     {
-        public Task<IEnumerable<Paciente>> GetAllPacientes();
+        public Task<ServiceResponse> GetAllPacientes();
         public Task<ServiceResponse> crearPaciente(PacienteDto nuevoPaciente);
     }
 }

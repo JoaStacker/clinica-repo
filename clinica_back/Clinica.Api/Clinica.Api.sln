@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clinica.Api", "Clinica.Api.csproj", "{39AF346F-C718-4FD9-87B6-30C9A7E4565B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clinica.Dominio", "..\DB\Clinica.Dominio.csproj", "{B49032E6-733D-4E98-9718-5DD475A83886}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clinica.Dominio", "..\Clinica.Dominio\Clinica.Dominio.csproj", "{B49032E6-733D-4E98-9718-5DD475A83886}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Clinica.Dominio", "02.Clinica.Dominio", "{59C1257A-D0D3-4419-81FF-B42BDAAA94C1}"
 EndProject
@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.Clinica.Presentacion", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.Clinica.Infraestructura", "03.Clinica.Infraestructura", "{757B1BC3-3A9B-42AD-B844-A37ECC9A7A24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Infraestructura.Datos", "..\Clinica.Infraestructura.Datos\Clinica.Infraestructura.Datos.csproj", "{4D20B2E5-99C9-4A2D-89E4-A121F545A45A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clinica.Infraestructura.Datos", "..\Clinica.Infraestructura.Datos\Clinica.Infraestructura.Datos.csproj", "{4D20B2E5-99C9-4A2D-89E4-A121F545A45A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Infraestructura.Transversal", "..\Clinica.Infraestructura.Transversal\Clinica.Infraestructura.Transversal.csproj", "{64E00040-4F5C-4F7D-B9B4-2D9450E5060E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clinica.Infraestructura.Transversal", "..\Clinica.Infraestructura.Transversal\Clinica.Infraestructura.Transversal.csproj", "{64E00040-4F5C-4F7D-B9B4-2D9450E5060E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

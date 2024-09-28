@@ -1,45 +1,51 @@
-version: '3.4'
-
-# networks:
-#   networkclinica:
+version: '3.6'
 
 services:
 
   database_service:
-    container_name: clinica_db
+    container_name: clinica-db
     image: mcr.microsoft.com/mssql/server:2022-latest
+    command: /bin/bash /entrypoint.sh
     ports:
-      - 8002:1433
+      - 1433:1433
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=password@12345#
-    # networks:
-    #   - networkclinica
+    volumes:
+      - ./CreateDatabase/docker-entrypoint.sh:/entrypoint.sh
+      - ./CreateDatabase/docker-db-init.sh:/db-init.sh
+      - ./CreateDatabase/clinica-db-init.sql:/clinica-db-init.sql
+    networks:
+      - my-proxy-net
 
   backend_app:
     container_name: clinica_api
     build:
       context: .
-      dockerfile: Dockerfile.backend_app
+      dockerfile: clinica_back/Dockerfile.backend_app
     ports:
-      - 8001:8080
-    depends_on:
-      - database_service
+      - 5146:5146
     environment:
       - DB_HOST=dbclinica
       - DB_NAME=ClinicaApp
       - DB_SA_PASSWORD=password@12345#
-    # networks:
-    #   - networkclinica
+    networks:
+      - my-proxy-net
 
-  flutter_app:
-    container_name: clinica_frontend
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend_app
-    ports:
-      - 5000:5000
-    depends_on:
-      - backend_app
-    environment:
-      - FLUTTER_WEB_PORT=5000
+  # flutter_app:
+  #   container_name: clinica_frontend
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.frontend_app
+  #   ports:
+  #     - 5000:5000
+  #   depends_on:
+  #     - backend_app
+  #   environment:
+  #     - FLUTTER_WEB_PORT=5000
+
+    
+networks:
+  my-proxy-net:
+    external:
+      name: clinica_network

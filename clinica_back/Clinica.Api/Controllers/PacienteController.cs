@@ -18,9 +18,8 @@ namespace Clinica.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            Console.WriteLine("Get pacientes");
-            var pacientes = await _servicio.GetAllPacientes();
-            return Ok(pacientes);
+            ServiceResponse sr = await _servicio.GetAllPacientes();
+            return Ok(sr.Content);
         }
 
         [HttpPost]
@@ -44,15 +43,15 @@ namespace Clinica.Api.Controllers
                 return BadRequest("Missing required fields.");
             }
 
-            ServiceResponse serviceResponse = await _servicio.crearPaciente(pacienteDto);
+            ServiceResponse sr = await _servicio.crearPaciente(pacienteDto);
 
-            if (serviceResponse.Ok)
+            if (sr.Status == ServiceStatus.OK)
             {
                 return CreatedAtAction(nameof(Get), new { id = pacienteDto.Dni }, null);
             }
             else
             {
-                return StatusCode(serviceResponse.StatusCode);
+                return StatusCode(sr.StatusCode);
             }
         }
     }

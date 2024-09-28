@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DB\Clinica.Dominio.csproj" />
+    <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
   </ItemGroup>
 
 </Project>

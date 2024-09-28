@@ -11,9 +11,11 @@ namespace Clinica.Dominio.Entidades
         public int DiagnosticoID { get; set; }
 
         [Column("enfermedad")]
+        [MaxLength(100)]
         public string Enfermedad { get; set; }
 
         [Column("observaciones")]
+        [MaxLength(500)]
         public string Observaciones { get; set; }
 
         [Column("fecha_creacion")]

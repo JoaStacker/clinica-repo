@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
@@ -23,9 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
     <ProjectReference Include="..\Clinica.Infraestructura.Datos\Clinica.Infraestructura.Datos.csproj" />
     <ProjectReference Include="..\Clinica.Infraestructura.Transversal\Clinica.Infraestructura.Transversal.csproj" />
-    <ProjectReference Include="..\DB\Clinica.Dominio.csproj" />
   </ItemGroup>
 
 </Project>
