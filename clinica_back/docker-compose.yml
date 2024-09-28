@@ -23,7 +23,7 @@ services:
       - database_service
     build:
       context: .
-      dockerfile: Dockerfile.backend_app
+      dockerfile: Dockerfile
     ports:
       - 5146:5146
     environment:

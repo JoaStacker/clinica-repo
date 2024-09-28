@@ -16,7 +16,7 @@ RUN flutter upgrade
 RUN flutter config --enable-web
 
 RUN mkdir /app/
-COPY clinica_front/. /app/
+COPY . /app/
 WORKDIR /app/
 RUN flutter build web --release --web-renderer html
 
