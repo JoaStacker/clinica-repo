@@ -14,6 +14,7 @@ services:
       - ./Database/docker-entrypoint.sh:/entrypoint.sh
       - ./Database/docker-db-init.sh:/db-init.sh
       - ./Database/clinica-db-init.sql:/clinica-db-init.sql
+      - sqlserver-data:/var/opt/mssql
     networks:
       - my-proxy-net
 
@@ -39,3 +40,6 @@ networks:
   my-proxy-net:
     external:
       name: clinica_network
+
+volumes:
+  sqlserver-data:
