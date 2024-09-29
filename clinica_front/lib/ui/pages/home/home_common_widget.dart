@@ -1,5 +1,6 @@
 import 'package:clinica_front/core/colors.dart';
 import 'package:clinica_front/core/text.dart';
+import 'package:clinica_front/data/model/paciente.dart';
 import 'package:clinica_front/ui/pages/common_widget/app_patient_search_bar.dart';
 import 'package:clinica_front/ui/pages/common_widget/app_patient_tile.dart';
 import 'package:clinica_front/ui/pages/common_widget/appbar.dart';
@@ -37,23 +38,7 @@ class HomeScreenDesktop extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 15),
-                _pattientList(
-                  Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(flex: 2, child: Text('NOMBRE DE PACIENTE', style: textStyle24)),
-                    Expanded(flex: 2, child: Text('20-25483699-4', style: textBlackStyle24)),
-                    Expanded(flex: 2,
-                      child: Text(
-                        'Calle José Ortega y Gasset, 40 - Tucumán, Argentina.',
-                        style: textBlackStyle24,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ],
-                )),
+                _pattientList(viewModel.pacientesRepositoryImp.getPaciente(), textStyle24, textBlackStyle24, isDesktop: true),
                 SizedBox(height: 15),
               ],
             ),
@@ -94,16 +79,7 @@ class HomeScreenTablet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 15),
-                _pattientList(
-                  Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('NOMBRE DE PACIENTE', style: textStyle24),
-                    Text('20-25483699-4', style: textBlackStyle24),
-                    Text('Calle José Ortega y Gasset, 40 - Tucumán, Argentina.', style: textBlackStyle24),
-                  ],
-                )),
+                _pattientList(viewModel.pacientesRepositoryImp.getPaciente(), textStyle24, textBlackStyle24),
                 SizedBox(height: 15),
               ],
             ),
@@ -143,16 +119,7 @@ class HomeScreenMobile extends StatelessWidget {
                   child: _patientSearchBar(viewModel),
                 ),
                 SizedBox(height: 15),
-                _pattientList(
-                  Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('NOMBRE DE PACIENTE', style: textStyle14),
-                    Text('20-25483699-4', style: textBlackStyle14),
-                    Text('Calle José Ortega y Gasset, 40 - Tucumán, Argentina.', style: textBlackStyle14),
-                  ],
-                )),
+                _pattientList(viewModel.pacientesRepositoryImp.getPaciente(), textStyle14, textBlackStyle14),
                 SizedBox(height: 15),
               ],
             ),
@@ -171,17 +138,49 @@ AppPatientSearchBar _patientSearchBar(HomeViewModel viewModel) {
   );
 }
 
-
-Expanded _pattientList(Widget body) {
+Expanded _pattientList(Future<List<Paciente>> future, TextStyle textStyle1, TextStyle textStyle2, {bool isDesktop = false}) {
   return Expanded(
-    child: ListView.builder(
-      itemCount: 50,
-      physics: BouncingScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      itemBuilder: (BuildContext context, int index) {
-        return AppPatientTile(body: body);
+    child: FutureBuilder<List<Paciente>>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator(color: kPrimaryColor));
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No patients found.'));
+        }
+        return ListView.builder(
+          itemCount: snapshot.data!.length,
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          itemBuilder: (BuildContext context, int index) {
+            return AppPatientTile(body: _buildPatientDetails(snapshot.data![index].persona, textStyle1, textStyle2, isDesktop: isDesktop));
+          },
+        );
       },
     ),
+  );
+}
+
+Widget _buildPatientDetails(Persona persona, TextStyle textStyle1, TextStyle textStyle2,{bool isDesktop = false}) {
+  String direction = '${persona.direccion.calle} ${persona.direccion.altura}, ${persona.direccion.localidad}, ${persona.direccion.provincia}';
+  return isDesktop ? Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+        Text(persona.nombreApellido, style: textStyle1),
+        Text(persona.dni, style: textStyle2),
+        Text(direction, style: textStyle2),
+    ],
+  ) : Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+      Text(persona.nombreApellido, style: textStyle1),
+      Text(persona.dni, style: textStyle2),
+      Text(direction, style: textStyle2),
+    ],
   );
 }
 
