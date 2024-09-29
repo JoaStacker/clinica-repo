@@ -84,7 +84,7 @@ class LoginScreen extends StatelessWidget {
                 backgroundColor: kPrimaryColor,
                 fixedSize: Size(size.width, 60),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-            onPressed: () => viewModel.navigatorPush(context, '/home'),
+            onPressed: () => viewModel.navigatorPush('/home'),
             child: Text('INICIAR SESIÓN', style: textTitle)),
         ),
       ],
