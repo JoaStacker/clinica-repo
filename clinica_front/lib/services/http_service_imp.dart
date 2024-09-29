@@ -26,21 +26,25 @@ class HttpServiceImp{
     );
   }
 
-  Future<http.Response> get(String service, {Map<String, dynamic>? queryParameters}) {
-    return client.get(
+  Future<http.Response> get(String service, {Map<String, dynamic>? queryParameters}) async {
+    return await client.get(
       getUrl(
         service,
         queryParameters: queryParameters,
       ),
-      headers: {
-        'Access-Control-Allow-Origin': '*', // This is usually set on the server
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Allow methods
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization', // Allow headers
-        'Content-Type': 'application/json',
-        'Accept': '*/*',
-        'withCredentials': 'true'
-      }
     );
   }
 
+  Future<http.Response> post(String service, {Map<String, dynamic>? queryParameters, Object? body}) async {
+    return await client.post(
+      getUrl(
+        service,
+        queryParameters: queryParameters,
+      ),
+      body: body,
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    );
+  }
 }

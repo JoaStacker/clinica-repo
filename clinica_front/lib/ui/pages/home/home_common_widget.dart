@@ -105,7 +105,7 @@ class HomeScreenMobile extends StatelessWidget {
             child: AppBarClinica(size: size, width: width),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => viewModel.navigatorPush(context, '/edit'),
+            onPressed: () => viewModel.navigatorPush('/edit'),
             backgroundColor: kPrimaryColor,
             child: Icon(Icons.add, color: kWhitePure),
           ),
@@ -190,6 +190,6 @@ ElevatedButton _addPatient(String title, double width, HomeViewModel viewModel, 
         backgroundColor: kPrimaryColor,
         fixedSize: Size(width, 45),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-    onPressed: () => viewModel.navigatorPush(context, '/edit'),
+    onPressed: () => viewModel.navigatorPush('/edit'),
     child: Text(title, style: textTitle, overflow: TextOverflow.ellipsis));
 }
