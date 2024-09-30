@@ -10,6 +10,15 @@ Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder => builder.AllowAnyOrigin() // Allow any origin
+                          .AllowAnyMethod() // Allow any method
+                          .AllowAnyHeader()); // Allow any header
+});
+
 // Por si necesitamos un puerto especifico.
 builder.WebHost.UseUrls("http://*:5146"); // Bind to port 5146
 
@@ -68,6 +77,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+// Use CORS policy
+app.UseCors("AllowAllOrigins");
+// Other middleware
+// descomentar esto cuando se use autenticacion.
+//app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers(); // Important for attribute routing
 app.Run();
