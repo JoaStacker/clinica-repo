@@ -27,10 +27,12 @@ namespace Clinica.Api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto usuario)
         {
             var usuarioCredentials = await _servicioUsuario.AuthenticateUser(usuario);
-            if (usuarioCredentials == null) { return Unauthorized("Las credenciales son incorrectas"); }
+            if (usuarioCredentials == null) 
+            { 
+                return Unauthorized("Las credenciales son incorrectas"); 
+            }
 
             var tokens = _utilidades.generarJWT(usuarioCredentials);
-
 
             var user = new UsuarioLoginDto()
             {
@@ -40,13 +42,6 @@ namespace Clinica.Api.Controllers
 
             return Ok(user);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Test()
-        {
-            return Ok("test");
-        }
-
 
     }
 }
