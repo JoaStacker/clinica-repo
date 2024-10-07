@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Clinica.Dominio.Enumeraciones;
 using Clinica.Dominio.Dtos;
+using System.Text.Json.Serialization;
 
 namespace Clinica.Dominio.Entidades
 {
@@ -35,7 +36,8 @@ namespace Clinica.Dominio.Entidades
 
         // Navigation properties
         public virtual Persona Persona { get; set; }
-
+        
+        [JsonIgnore]
         public virtual HistoriaClinica HistoriaClinica { get; set; }
 
         // Constructor default
