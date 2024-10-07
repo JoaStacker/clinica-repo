@@ -51,8 +51,14 @@ namespace Clinica.Dominio.Entidades
             FechaDefuncion = null;
             Estado = EstadoPaciente.ACTIVO;
 
-            Direccion nuevaDireccion = new Direccion
+            PersonaDto personaDto = new PersonaDto
             {
+                Cuil = pacienteDto.Cuil,
+                Dni = pacienteDto.Dni,
+                FechaNacimiento = pacienteDto.FechaNacimiento,
+                Email = pacienteDto.Email,
+                Telefono = pacienteDto.Telefono,
+                NombreApellido = pacienteDto.NombreApellido,
                 Provincia = pacienteDto.Provincia,
                 Localidad = pacienteDto.Localidad,
                 Cop = pacienteDto.Cop,
@@ -62,16 +68,7 @@ namespace Clinica.Dominio.Entidades
                 Departamento = pacienteDto.Departamento
             };
 
-            Persona nuevaPersona = new Persona
-            {
-                Cuil = pacienteDto.Cuil,
-                Dni = pacienteDto.Dni,
-                FechaDeNacimiento = pacienteDto.FechaNacimiento,
-                Email = pacienteDto.Email,
-                Telefono = pacienteDto.Telefono,
-                NombreApellido = pacienteDto.NombreApellido,
-                Direccion = nuevaDireccion
-            };
+            Persona nuevaPersona = new Persona(personaDto);
 
             HistoriaClinica nuevaHistoriaClinica= new HistoriaClinica
             {

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Clinica.Dominio.Dtos;
 
 namespace Clinica.Dominio.Entidades
 {
@@ -34,5 +35,28 @@ namespace Clinica.Dominio.Entidades
 
         // Navigation property
         public virtual Direccion Direccion { get; set; }
+
+        public Persona() { }
+        public Persona(PersonaDto personaDto)
+        {
+            Cuil = personaDto.Cuil;
+            Dni = personaDto.Dni;
+            Email = personaDto.Email;
+            Telefono = personaDto.Telefono;
+            NombreApellido = personaDto.NombreApellido;
+
+            Direccion nuevaDireccion = new Direccion
+            {
+                Provincia = personaDto.Provincia,
+                Localidad = personaDto.Localidad,
+                Cop = personaDto.Cop,
+                Calle = personaDto.Calle,
+                Altura = personaDto.Altura,
+                Piso = personaDto.Piso,
+                Departamento = personaDto.Departamento
+            };
+
+            Direccion = nuevaDireccion;
+        }
     }
 }
