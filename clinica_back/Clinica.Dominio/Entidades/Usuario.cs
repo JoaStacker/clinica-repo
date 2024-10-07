@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Clinica.Dominio.Dtos;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,11 +21,41 @@ namespace Clinica.Dominio.Entidades
         public string Email { get; set; }
 
         // Clave foránea a Persona
-        [ForeignKey("Persona")]
-        [Column("persona_id")]
-        public int PersonaID { get; set; }
+        [ForeignKey("Medico")]
+        [Column("medico_id")]
+        public int MedicoId { get; set; }
 
         // Propiedad de navegación
-        public virtual Persona Persona { get; set; }
+        public virtual Medico Medico { get; set; }
+
+        public Usuario() { }
+        public Usuario(SignUpDto usuarioDto)
+        {
+            Email = usuarioDto.Email;
+            Clave = usuarioDto.Clave;
+
+            MedicoDto medicoDto = new MedicoDto
+            {
+                Matricula = usuarioDto.Matricula,
+                Especialidad = usuarioDto.Especialidad,
+                Cuil = usuarioDto.Cuil,
+                Dni = usuarioDto.Dni,
+                FechaNacimiento = usuarioDto.FechaDeNacimiento,
+                Email = usuarioDto.Email,
+                Telefono = usuarioDto.Telefono,
+                NombreApellido = usuarioDto.NombreApellido,
+                Provincia = usuarioDto.Provincia,
+                Localidad = usuarioDto.Localidad,   
+                Cop = usuarioDto.Cop,
+                Calle = usuarioDto.Calle,
+                Altura = usuarioDto.Altura,
+                Piso = usuarioDto.Piso,
+                Departamento = usuarioDto.Departamento
+            };
+            Medico nuevoMedico = new Medico(medicoDto);
+
+            Medico = nuevoMedico;
+        }
     }
+
 }

@@ -47,11 +47,13 @@ namespace Clinica.Api.Controllers
 
             if (sr.Status == ServiceStatus.OK)
             {
-                return CreatedAtAction(nameof(Get), new { id = pacienteDto.Dni }, null);
+                return CreatedAtAction(nameof(crearPaciente), new { id = pacienteDto.Dni },
+                        new { message = "Paciente creado con éxito.", id = pacienteDto.Dni });
             }
             else
             {
-                return StatusCode(sr.StatusCode);
+                return StatusCode(sr.StatusCode,
+                    new { message = "Error al crear el paciente.", error = sr.Message });
             }
         }
     }
