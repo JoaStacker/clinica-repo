@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Clinica.Dominio.Contratos;
 using Clinica.Api.Services;
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Clinica.Api.Utils;
 
 // Load environment variables from .env file
 Env.Load();
@@ -29,11 +33,11 @@ builder.Services.AddSwaggerGen();
 
 
 // Database Context Dependency Injection con variables de entorno.
-var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
-var dbName = Environment.GetEnvironmentVariable("DB_NAME");
-var dbUser = Environment.GetEnvironmentVariable("DB_USER");
-var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
+var dbHost = "localhost";/*Environment.GetEnvironmentVariable("DB_HOST")*/
+var dbPort = "8002"/*Environment.GetEnvironmentVariable("DB_PORT")*/;
+var dbName = "dbclinica"/*Environment.GetEnvironmentVariable("DB_NAME")*/;
+var dbUser = "sa"/*Environment.GetEnvironmentVariable("DB_USER")*/;
+var dbPassword = "password@12345#";
 
 if (string.IsNullOrEmpty(dbHost) || string.IsNullOrEmpty(dbName) || string.IsNullOrEmpty(dbPassword) || string.IsNullOrEmpty(dbPort))
 {
@@ -47,6 +51,27 @@ builder.Services.AddDbContext<ClinicaContext>(opt => {
     opt.UseLazyLoadingProxies();
 });
 
+builder.Services.AddSingleton<Utils>();
+
+builder.Services.AddAuthentication(config =>{
+    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(config =>
+{
+    config.RequireHttpsMetadata = false;
+    config.SaveToken = true;
+    config.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"]!))
+    };
+});
+
 // Database Context Dependency Injection con connection string directo.
 //builder.Services.AddDbContext<ClinicaContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("ClinicaConnection")));
 
@@ -55,6 +80,7 @@ builder.Services.AddScoped<IRepositorio<EntidadBase>, Repositorio<EntidadBase>>(
 
 // Agregar sevicios.
 builder.Services.AddScoped<IPacienteServicio, PacienteServicio>();
+builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
 
 // Agregar controladores a los servicios.
 builder.Services.AddControllers();
@@ -83,6 +109,8 @@ app.UseCors("AllowAllOrigins");
 // descomentar esto cuando se use autenticacion.
 //app.UseAuthorization();
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers(); // Important for attribute routing
 app.Run();
 

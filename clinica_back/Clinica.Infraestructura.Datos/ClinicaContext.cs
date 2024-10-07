@@ -9,7 +9,7 @@ namespace Clinica.Infraestructura.Datos
         {
         }
         
-
+         
         public DbSet<HistoriaClinica> HistoriasClinicas { get; set; }
 
         public DbSet<Diagnostico> Diagnosticos { get; set; }
@@ -31,6 +31,8 @@ namespace Clinica.Infraestructura.Datos
         public DbSet<Persona> Personas { get; set; }
 
         public DbSet<Direccion> Direcciones { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +47,7 @@ namespace Clinica.Infraestructura.Datos
             modelBuilder.Entity<Recepcionista>().ToTable("recepcionistas");
             modelBuilder.Entity<Persona>().ToTable("personas");
             modelBuilder.Entity<Direccion>().ToTable("direcciones");
+            modelBuilder.Entity<Usuario>().ToTable("usuarios");
 
             // Si necesito evitar propiedades.
             //modelBuilder.Entity<Class>().Ignore(p => p.Prop);
