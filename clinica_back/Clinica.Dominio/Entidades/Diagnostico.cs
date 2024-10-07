@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Clinica.Dominio.Dtos;
+using System.Text.Json.Serialization;
 
 namespace Clinica.Dominio.Entidades
 {
@@ -26,8 +28,17 @@ namespace Clinica.Dominio.Entidades
         public int HistoriaClinicaID { get; set; }
 
         // Navigation properties
+        [JsonIgnore] // Prevent circular reference
         public virtual HistoriaClinica HistoriaClinica { get; set; }
         public virtual ICollection<EvolucionClinica> EvolucionesClinicas { get; set; } = new HashSet<EvolucionClinica>();
 
+        public Diagnostico() { }
+        public Diagnostico(DiagnosticoDto diagnosticoDto, HistoriaClinica historiaClinica)
+        {
+            Enfermedad = diagnosticoDto.Enfermedad;
+            Observaciones = diagnosticoDto.Observaciones;
+            FechaDeCreacion = diagnosticoDto.FechaDeCreacion;
+            HistoriaClinica = historiaClinica;
+        }
     }
 }

@@ -59,7 +59,8 @@ namespace Clinica.Api.Services
                 return new ServiceResponse(
                     ServiceStatus.OK,
                     StatusCodes.Status200OK,
-                    "Paciente creado con éxito"
+                    "Paciente creado con éxito",
+                    NuevoPaciente
                 );
             }catch (Exception ex)
             {

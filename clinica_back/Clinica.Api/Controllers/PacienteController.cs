@@ -47,8 +47,8 @@ namespace Clinica.Api.Controllers
 
             if (sr.Status == ServiceStatus.OK)
             {
-                return CreatedAtAction(nameof(crearPaciente), new { id = pacienteDto.Dni },
-                        new { message = "Paciente creado con éxito.", id = pacienteDto.Dni });
+                return CreatedAtAction(nameof(crearPaciente), sr.Content,
+                        new { message = "Paciente creado con éxito.", sr.Content });
             }
             else
             {

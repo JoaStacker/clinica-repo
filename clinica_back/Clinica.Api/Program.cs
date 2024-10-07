@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Clinica.Api.Utils;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 // Load environment variables from .env file
 Env.Load();
@@ -81,6 +82,7 @@ builder.Services.AddScoped<IRepositorio<EntidadBase>, Repositorio<EntidadBase>>(
 // Agregar sevicios.
 builder.Services.AddScoped<IPacienteServicio, PacienteServicio>();
 builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
+builder.Services.AddScoped<IDiagnosticoServicio, DiagnosticoServicio>();
 
 // Agregar controladores a los servicios.
 builder.Services.AddControllers();

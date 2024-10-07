@@ -4,6 +4,7 @@ using Clinica.Infraestructura.Datos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clinica.Infraestructura.Datos.Migrations
 {
     [DbContext(typeof(ClinicaContext))]
-    partial class ClinicaContextModelSnapshot : ModelSnapshot
+    [Migration("20241007214028_nullable HC para diag")]
+    partial class nullableHCparadiag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
