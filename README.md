@@ -12,7 +12,7 @@ Proyecto de Ingeneriería de Software de Sistema de Clinica.
 
 ## Entornos
 
-- <b>DESARROLLO</b>: Cada quien desarrolla su entorno en local como desee.
+- <b>DESARROLLO</b>:
     - Front:
         - Se siguiere usar Visual Studio Code + Extensiones.
     - Back:
