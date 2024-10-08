@@ -38,8 +38,12 @@ namespace Clinica.Api.Utils
                 new Claim(ClaimTypes.NameIdentifier, modelo.Id.ToString()),
                 new Claim(ClaimTypes.Email, modelo.Email!)
             };
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]!));
+            var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+            if (string.IsNullOrEmpty(jwtKey))
+            {
+                throw new Exception("JWT key is not configured properly.");
+            }
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
             //crear detalle del token
