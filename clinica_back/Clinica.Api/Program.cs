@@ -34,12 +34,17 @@ builder.Services.AddSwaggerGen();
 
 
 // Database Context Dependency Injection con variables de entorno.
-var dbHost = "localhost";/*Environment.GetEnvironmentVariable("DB_HOST")*/
-var dbPort = "8002"/*Environment.GetEnvironmentVariable("DB_PORT")*/;
-var dbName = "dbclinica"/*Environment.GetEnvironmentVariable("DB_NAME")*/;
-var dbUser = "sa"/*Environment.GetEnvironmentVariable("DB_USER")*/;
-var dbPassword = "password@12345#";
-
+//var dbHost = "localhost";/*Environment.GetEnvironmentVariable("DB_HOST")*/
+//var dbPort = "8002"/*Environment.GetEnvironmentVariable("DB_PORT")*/;
+//var dbName = "dbclinica"/*Environment.GetEnvironmentVariable("DB_NAME")*/;
+//var dbUser = "sa"/*Environment.GetEnvironmentVariable("DB_USER")*/;
+//var dbPassword = "password@12345#";
+// Database Context Dependency Injection con variables de entorno.
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
 if (string.IsNullOrEmpty(dbHost) || string.IsNullOrEmpty(dbName) || string.IsNullOrEmpty(dbPassword) || string.IsNullOrEmpty(dbPort))
 {
     throw new InvalidOperationException("Required environment variables are missing: DB_HOST, DB_NAME, DB_SA_PASSWORD, DB_PORT.");
