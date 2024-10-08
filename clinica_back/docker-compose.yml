@@ -33,8 +33,10 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_SA_PASSWORD=${DB_SA_PASSWORD}
+      - JWT_KEY=${JWT_KEY}
     networks:
       - my-proxy-net
+    restart: always
 
 networks:
   my-proxy-net:

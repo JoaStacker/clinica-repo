@@ -45,6 +45,8 @@ var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
 var dbName = Environment.GetEnvironmentVariable("DB_NAME");
 var dbUser = Environment.GetEnvironmentVariable("DB_USER");
 var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
+var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+
 if (string.IsNullOrEmpty(dbHost) || string.IsNullOrEmpty(dbName) || string.IsNullOrEmpty(dbPassword) || string.IsNullOrEmpty(dbPort))
 {
     throw new InvalidOperationException("Required environment variables are missing: DB_HOST, DB_NAME, DB_SA_PASSWORD, DB_PORT.");
@@ -66,6 +68,11 @@ builder.Services.AddAuthentication(config =>{
 {
     config.RequireHttpsMetadata = false;
     config.SaveToken = true;
+    if (string.IsNullOrEmpty(jwtKey))
+    {
+        throw new Exception("JWT key is not configured properly.");
+    }
+
     config.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
@@ -73,8 +80,8 @@ builder.Services.AddAuthentication(config =>{
         ValidateAudience = false,
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey
-        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"]!))
+    IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(jwtKey))
     };
 });
 
@@ -102,12 +109,12 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
-}
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseDeveloperExceptionPage();
+//}
 
 app.UseRouting();
 // Use CORS policy

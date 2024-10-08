@@ -15,7 +15,7 @@ namespace Clinica.Api.Controllers
     public class SignUpController : ControllerBase
     {
         private readonly IUsuarioServicio _servicioUsuario;
-        public SignUpController(IUsuarioServicio servicio, Clinica.Api.Utils.Utils utilidades)
+        public SignUpController(IUsuarioServicio servicio)
         {
             _servicioUsuario = servicio;
         }
