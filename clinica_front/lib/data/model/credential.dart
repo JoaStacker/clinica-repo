@@ -1,15 +1,14 @@
-
 class Credential{
-
-  final String username;
-  final String password;
+  final String email;
+  final String clave;
+  Credential(this.email, this.clave);
 
   Credential.fromJson(Map<String, dynamic> map) :
-        username = map['username'],
-        password = map['password'];
+        email = map['email'],
+        clave = map['clave'];
 
   Map<String, dynamic> toJson() => {
-    'username': username,
-    'password': password
+    'email': email,
+    'clave': clave
   };
 }
