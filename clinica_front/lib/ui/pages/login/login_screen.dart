@@ -14,23 +14,26 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Consumer<LoginViewModel>(builder: (BuildContext buildContextBuilder, LoginViewModel vm, Widget? child) {
-        return Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                reverse: true,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: sizeScreen)
-                          .add(EdgeInsets.only(bottom: 100 + MediaQuery.of(context).viewInsets.bottom)),
-                      child: loginForm(context, vm),
-                    ),
-                  ],
+        return Form(
+          key: vm.formKey,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  reverse: true,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: sizeScreen)
+                            .add(EdgeInsets.only(bottom: 100 + MediaQuery.of(context).viewInsets.bottom)),
+                        child: loginForm(context, vm),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       })
     );
@@ -44,7 +47,7 @@ class LoginScreen extends StatelessWidget {
         Image.asset('resources/images/clinica.png', scale: 0.8),
         SizedBox(height: 25),
         AppTextField(
-          labelText: 'USUARIO',
+          labelText: 'EMAIL',
           labelStyle: hintStyle,
           scrollPadding: EdgeInsets.only(bottom: 40),
           controller: viewModel.userInput,
@@ -66,7 +69,7 @@ class LoginScreen extends StatelessWidget {
               child: Icon(viewModel.passwordField ? Icons.visibility_off_outlined : Icons.visibility_outlined, color: Colors.grey),
               onTap: () => viewModel.changePasswordField(),
             ),
-            onChange: (text) => viewModel.failureMessage.isNotEmpty? viewModel.setFailureMessage('') : null),
+        ),
         Container(
           decoration: BoxDecoration(
             color: kPrimaryColor,
@@ -84,7 +87,7 @@ class LoginScreen extends StatelessWidget {
                 backgroundColor: kPrimaryColor,
                 fixedSize: Size(size.width, 60),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-            onPressed: () => viewModel.navigatorPush('/home'),
+            onPressed: () => viewModel.handleLogin(),
             child: Text('INICIAR SESIÓN', style: textTitle)),
         ),
       ],

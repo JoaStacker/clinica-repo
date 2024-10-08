@@ -10,7 +10,7 @@ class Paciente {
     int personaId;
     int historiaClinicaId;
     Persona persona;
-    HistoriaClinica historiaClinica;
+    //HistoriaClinica historiaClinica;
 
     Paciente({
         required this.pacienteId,
@@ -21,7 +21,7 @@ class Paciente {
         required this.personaId,
         required this.historiaClinicaId,
         required this.persona,
-        required this.historiaClinica,
+        //required this.historiaClinica,
     });
 
 
@@ -35,7 +35,7 @@ class Paciente {
       'personaId': personaId,
       'historiaClinicaID': historiaClinicaId,
       'persona': persona.toMap(),
-      'historiaClinica': historiaClinica.toMap(),
+      //'historiaClinica': historiaClinica.toMap(),
     };
   }
 
@@ -49,7 +49,7 @@ class Paciente {
       personaId: map['personaID'] as int,
       historiaClinicaId: map['historiaClinicaID'] as int,
       persona: Persona.fromMap(map['persona'] as Map<String,dynamic>),
-      historiaClinica: HistoriaClinica.fromMap(map['historiaClinica'] as Map<String,dynamic>),
+      //historiaClinica: HistoriaClinica.fromMap(map['historiaClinica'] as Map<String,dynamic>),
     );
   }
 
