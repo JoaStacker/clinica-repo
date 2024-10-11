@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../common_widget/input_white.dart';
+import '../../common_widget/input_white.dart';
 
 class EditPatientCommonWidget extends StatelessWidget {
   const EditPatientCommonWidget({super.key, required this.width});
@@ -17,7 +17,7 @@ class EditPatientCommonWidget extends StatelessWidget {
       return Stack(
         children: [
           Image.asset(
-            'resources/images/doctor_tile_background_screen.png',
+            'resources/images/patient_tile_background_screen.png',
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover,

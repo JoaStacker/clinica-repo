@@ -1,6 +1,6 @@
 import 'package:clinica_front/core/colors.dart';
 import 'package:clinica_front/core/text.dart';
-import 'package:clinica_front/ui/pages/common_widget/app_text_field.dart';
+import 'package:clinica_front/ui/common_widget/app_text_field.dart';
 import 'package:clinica_front/ui/pages/login/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

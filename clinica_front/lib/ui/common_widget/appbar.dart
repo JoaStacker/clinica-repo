@@ -3,7 +3,7 @@ import 'package:clinica_front/locator.dart';
 import 'package:clinica_front/services/autentication.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/colors.dart';
+import '../../core/colors.dart';
 
 class AppBarClinica extends StatelessWidget {
   const AppBarClinica({
