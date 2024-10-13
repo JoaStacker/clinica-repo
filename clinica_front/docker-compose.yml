@@ -1,0 +1,20 @@
+version: '3.6'
+
+services:
+  frontend_app:
+    container_name: clinica_frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      - API_BASE_URI=backend_app
+      - FLUTTER_WEB_PORT=5000
+    networks:
+      - my-proxy-net
+
+networks:
+  my-proxy-net:
+    external:
+      name: clinica_network

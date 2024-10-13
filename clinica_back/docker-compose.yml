@@ -1,0 +1,47 @@
+version: '3.6'
+
+services:
+  database_service:
+    container_name: clinica-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    command: /bin/bash /entrypoint.sh
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${DB_SA_PASSWORD}
+    volumes:
+      - ./Database/docker-entrypoint.sh:/entrypoint.sh
+      - ./Database/docker-db-init.sh:/db-init.sh
+      - ./Database/clinica-db-init.sql:/clinica-db-init.sql
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - my-proxy-net
+
+  backend_app:
+    container_name: clinica_api
+    depends_on:
+      - database_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5146:5146
+    environment:
+      - DB_HOST=database_service
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_SA_PASSWORD=${DB_SA_PASSWORD}
+      - JWT_KEY=${JWT_KEY}
+    networks:
+      - my-proxy-net
+    restart: always
+
+networks:
+  my-proxy-net:
+    external:
+      name: clinica_network
+
+volumes:
+  sqlserver-data:
