@@ -34,55 +34,20 @@ class DetailPatientCommonWidget extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        height: height * 0.22,
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2), // Shadow color
-                              spreadRadius: 2, // Spread radius
-                              blurRadius: 5, // Blur radius
-                              offset: Offset(0, 3), // Offset for the shadow
-                            ),
-                          ],
-                          color: kWhitePure,
-                        ),
-                        child: Column(
-                          children: [
-                            _backButtonAndName(vm),
-                            SizedBox(height: 20),
-                            Flexible(
-                              child: _buildPatientInfoRow(
-                                context,
-                                Icons.person,
-                                vm.patient.persona.cuil,
-                                Icons.calendar_today,
-                                vm.patient.persona.fechaDeNacimiento.substring(0, 10),
-                                Icons.phone,
-                                vm.patient.persona.telefono,
-                                Icons.email,
-                                vm.patient.persona.email,
-                                infoRowCount: infoRowCount
+                          height: height * 0.22,
+                          width: double.maxFinite,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2), // Shadow color
+                                spreadRadius: 2, // Spread radius
+                                blurRadius: 5, // Blur radius
+                                offset: Offset(0, 3), // Offset for the shadow
                               ),
-                            ),
-                            SizedBox(height: 20),
-                            Flexible(
-                              child: _buildPatientInfoRow(
-                                context,
-                                Icons.person_off,
-                                vm.patient.fechaDefuncion ?? 'N/A',
-                                Icons.card_membership,
-                                vm.patient.nroAfiliado.toString(),
-                                Icons.local_airport_rounded,
-                                vm.patient.pasaporte,
-                                Icons.home,
-                                '${vm.patient.persona.direccion.calle} ${vm.patient.persona.direccion.altura}, ${vm.patient.persona.direccion.localidad}, ${vm.patient.persona.direccion.provincia}',
-                                infoRowCount: infoRowCount
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            ],
+                            color: kWhitePure,
+                          ),
+                          child: _headPatient(context, vm)),
                       Padding(
                         padding: EdgeInsets.all(40),
                         child: ElevatedButton(
@@ -123,7 +88,8 @@ class DetailPatientCommonWidget extends StatelessWidget {
   }
 
   Widget _buildPatientInfoRow(BuildContext context, IconData icon1, String text1, IconData icon2, String text2, IconData icon3,
-      String text3, IconData icon4, String text4, {int infoRowCount = 2}) {
+      String text3, IconData icon4, String text4,
+      {int infoRowCount = 2}) {
     // Adjust the number of elements based on infoRowCount
     List<Widget> rowItems = [];
     if (infoRowCount >= 1) {
@@ -144,7 +110,7 @@ class DetailPatientCommonWidget extends StatelessWidget {
       rowItems.add(SizedBox(width: 5));
       rowItems.add(Expanded(child: Text(text4)));
     }
-    
+
     return Row(children: [
       Spacer(),
       ...rowItems,
@@ -156,4 +122,40 @@ class DetailPatientCommonWidget extends StatelessWidget {
       fixedSize: Size(350, 50),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       backgroundColor: kTernary100);
+
+  Column _headPatient(BuildContext context, DetailPatientViewModel vm) {
+    return Column(
+      children: [
+        _backButtonAndName(vm),
+        SizedBox(height: 20),
+        Flexible(
+          child: _buildPatientInfoRow(
+              context,
+              Icons.person,
+              vm.patient.persona.cuil,
+              Icons.calendar_today,
+              vm.patient.persona.fechaDeNacimiento.substring(0, 10),
+              Icons.phone,
+              vm.patient.persona.telefono,
+              Icons.email,
+              vm.patient.persona.email,
+              infoRowCount: infoRowCount),
+        ),
+        SizedBox(height: 20),
+        Flexible(
+          child: _buildPatientInfoRow(
+              context,
+              Icons.person_off,
+              vm.patient.fechaDefuncion ?? 'N/A',
+              Icons.card_membership,
+              vm.patient.nroAfiliado.toString(),
+              Icons.local_airport_rounded,
+              vm.patient.pasaporte,
+              Icons.home,
+              '${vm.patient.persona.direccion.calle} ${vm.patient.persona.direccion.altura}, ${vm.patient.persona.direccion.localidad}, ${vm.patient.persona.direccion.provincia}',
+              infoRowCount: infoRowCount),
+        ),
+      ],
+    );
+  }
 }
