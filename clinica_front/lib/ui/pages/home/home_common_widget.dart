@@ -156,7 +156,7 @@ Expanded _pattientList(HomeViewModel viewModel, TextStyle textStyle1, TextStyle 
           padding: EdgeInsets.symmetric(horizontal: 15),
           itemBuilder: (BuildContext context, int index) {
             return AppPatientTile(
-              onTap: () => viewModel.navigationReplace(path: '/patient', arguments: snapshot.data![index]), // Pass the patient ID
+              onTap: () => viewModel.navigationReplace(path: '/patient/${snapshot.data![index].pacienteId.toString()}'), // Pass the patient ID
               body: _buildPatientDetails(snapshot.data![index].persona, 
               textStyle1, textStyle2, isDesktop: isDesktop));
           },

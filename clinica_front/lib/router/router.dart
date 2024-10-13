@@ -1,4 +1,3 @@
-import 'package:clinica_front/data/model/paciente.dart';
 import 'package:clinica_front/ui/pages/detail_patient/detail_patient_page.dart';
 import 'package:clinica_front/ui/pages/edit/edit_patient_page.dart';
 import 'package:clinica_front/ui/pages/home/home_page.dart';
@@ -19,10 +18,10 @@ final List<RouteBase> router = [
     builder: (context, state) => EditPatientPage(),
   ),
   GoRoute(
-    path: '/patient',
+    path: '/patient/:id',
     builder: (context, state){
-      final patient = state.extra as Paciente;
-      return DetailPatientPage(patient: patient);
+      final patientId = state.pathParameters['id']!;
+      return DetailPatientPage(patientId: patientId);
     } 
   ),
 ];
