@@ -78,7 +78,7 @@ class EditPatientViewModel extends ChangeNotifier with NavegationServices {
           nroAfiliado: nroAfiliado,
           fechaDeNaciento: fechaDeNaciento);
       await pacientesRepositoryImp.savePaciente(pacienteRequest);
-      navigatorPush('/home');
+      navigationReplace(path: '/home');
     }
   }
 }

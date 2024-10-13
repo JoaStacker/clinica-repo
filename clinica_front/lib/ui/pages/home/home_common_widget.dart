@@ -1,9 +1,9 @@
 import 'package:clinica_front/core/colors.dart';
 import 'package:clinica_front/core/text.dart';
 import 'package:clinica_front/data/model/paciente.dart';
-import 'package:clinica_front/ui/pages/common_widget/app_patient_search_bar.dart';
-import 'package:clinica_front/ui/pages/common_widget/app_patient_tile.dart';
-import 'package:clinica_front/ui/pages/common_widget/appbar.dart';
+import 'package:clinica_front/ui/common_widget/app_patient_search_bar.dart';
+import 'package:clinica_front/ui/common_widget/app_patient_tile.dart';
+import 'package:clinica_front/ui/common_widget/appbar.dart';
 import 'package:clinica_front/ui/pages/home/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +38,7 @@ class HomeScreenDesktop extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 15),
-                _pattientList(viewModel.pacientesRepositoryImp.getPaciente(), textStyle24, textBlackStyle24, isDesktop: true),
+                _pattientList(viewModel, textStyle24, textBlackStyle24, isDesktop: true),
                 SizedBox(height: 15),
               ],
             ),
@@ -79,7 +79,7 @@ class HomeScreenTablet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 15),
-                _pattientList(viewModel.pacientesRepositoryImp.getPaciente(), textStyle24, textBlackStyle24),
+                _pattientList(viewModel, textStyle24, textBlackStyle24),
                 SizedBox(height: 15),
               ],
             ),
@@ -105,7 +105,7 @@ class HomeScreenMobile extends StatelessWidget {
             child: AppBarClinica(size: size, width: width),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => viewModel.navigatorPush('/edit'),
+            onPressed: () => viewModel.navigationReplace(path: '/edit'),
             backgroundColor: kPrimaryColor,
             child: Icon(Icons.add, color: kWhitePure),
           ),
@@ -119,7 +119,7 @@ class HomeScreenMobile extends StatelessWidget {
                   child: _patientSearchBar(viewModel),
                 ),
                 SizedBox(height: 15),
-                _pattientList(viewModel.pacientesRepositoryImp.getPaciente(), textStyle14, textBlackStyle14),
+                _pattientList(viewModel, textStyle14, textBlackStyle14),
                 SizedBox(height: 15),
               ],
             ),
@@ -138,10 +138,10 @@ AppPatientSearchBar _patientSearchBar(HomeViewModel viewModel) {
   );
 }
 
-Expanded _pattientList(Future<List<Paciente>> future, TextStyle textStyle1, TextStyle textStyle2, {bool isDesktop = false}) {
+Expanded _pattientList(HomeViewModel viewModel, TextStyle textStyle1, TextStyle textStyle2, {bool isDesktop = false}) {
   return Expanded(
     child: FutureBuilder<List<Paciente>>(
-      future: future,
+      future: viewModel.pacientesRepositoryImp.getPaciente(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator(color: kPrimaryColor));
@@ -155,7 +155,10 @@ Expanded _pattientList(Future<List<Paciente>> future, TextStyle textStyle1, Text
           physics: BouncingScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: 15),
           itemBuilder: (BuildContext context, int index) {
-            return AppPatientTile(body: _buildPatientDetails(snapshot.data![index].persona, textStyle1, textStyle2, isDesktop: isDesktop));
+            return AppPatientTile(
+              onTap: () => viewModel.navigationReplace(path: '/patient/${snapshot.data![index].pacienteId.toString()}'), // Pass the patient ID
+              body: _buildPatientDetails(snapshot.data![index].persona, 
+              textStyle1, textStyle2, isDesktop: isDesktop));
           },
         );
       },
@@ -190,6 +193,6 @@ ElevatedButton _addPatient(String title, double width, HomeViewModel viewModel, 
         backgroundColor: kPrimaryColor,
         fixedSize: Size(width, 45),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-    onPressed: () => viewModel.navigatorPush('/edit'),
+    onPressed: () => viewModel.navigationReplace(path: '/edit'),
     child: Text(title, style: textTitle, overflow: TextOverflow.ellipsis));
 }

@@ -1,14 +1,42 @@
 import 'package:clinica_front/services/navegation_router.dart';
-import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 mixin NavegationServices{
 
-  void navigatorPush(String router, {Object? arguments = false}){
-    Navigator.pushNamed(NavigatorKey().key.currentContext!, router, arguments: arguments);
+  Future<dynamic>? navigateTo({
+    required String path,
+    Map<String, String>? queryParams,
+    bool replace = false,
+    Object? arguments,
+  }) {
+    final context = NavigatorKey().key.currentContext!;
+
+    if (queryParams != null) {
+      path = Uri(path: path, queryParameters: queryParams).toString();
+    }
+    if (replace) {
+      context.go(path, extra: arguments);
+      return null;
+    }
+    return context.push(path, extra: arguments); 
+  }
+
+  void navigationReplace({
+    required String path,
+    Map<String, String>? queryParams,
+    Object? arguments,
+  }) {
+    navigateTo(
+      path: path,
+      queryParams: queryParams,
+      arguments: arguments,
+      replace: true,
+    );
   }
 
   void back({dynamic result}) {
     final context = NavigatorKey().key.currentContext!;
-    Navigator.of(context).pop();
+    context.pop(result);
   }
+  
 }

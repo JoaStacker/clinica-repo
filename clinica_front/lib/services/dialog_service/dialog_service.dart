@@ -6,6 +6,7 @@ import 'package:clinica_front/services/dialog_service/dialog_request.dart';
 import 'package:clinica_front/services/dialog_service/dialog_response.dart';
 import 'package:clinica_front/services/navegation_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DialogService {
 
@@ -53,6 +54,6 @@ class DialogService {
 
   void _dialogCompleteWithResponse(DialogConfirmEnum dialogConfirmEnum){
     response = DialogResponse(confirmed: dialogConfirmEnum);
-    Navigator.of(NavigatorKey().key.currentContext!).pop();
+    (NavigatorKey().key.currentContext!).pop();
   }
 }

@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 
 
 class AppPatientTile extends StatelessWidget {
-  const AppPatientTile({super.key, required this.body});
+  const AppPatientTile({super.key, required this.body, required this.onTap});
   final Widget body;
+  final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: null,
+        onTap: onTap,
         child: Card(
         shadowColor: kWhiteAlt70,
         elevation: 7,

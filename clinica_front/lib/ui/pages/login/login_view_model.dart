@@ -30,7 +30,7 @@ class LoginViewModel extends ChangeNotifier with NavegationServices{
   void handleLogin() async {
     if (_formKey.currentState!.validate()) {
       final login = await _login(_userInput.text.trim(), passwordInput.text.trim());
-      !login? _failureMessage = 'Usuario o contraseña incorrectos' : navigatorPush('/home');
+      !login? _failureMessage = 'Usuario o contraseña incorrectos' : navigationReplace(path: '/home');
       notifyListeners();
     }
   }

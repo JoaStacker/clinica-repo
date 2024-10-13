@@ -28,7 +28,7 @@ class AuthenticationService with NavegationServices{
   Future<void> logout() async {
     // delete authentication token
     await _flutterSecureStorage.delete(key: 'auth_token');
-    navigatorPush('/login');
+    navigationReplace(path: '/login');
   }
 
   Future<String> isAuthenticated() async {
