@@ -18,7 +18,7 @@ class CentroClinico extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: locator<AuthenticationService>().isAuthenticated(),
+      future: locator<AuthenticationService>().getToken(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -28,14 +28,14 @@ class CentroClinico extends StatelessWidget {
 
         final isAuthenticated = snapshot.data!;
         final localRouter = GoRouter(
-          navigatorKey: NavigatorKey().key, 
-          initialLocation: isAuthenticated.isEmpty ? '/home' : '/login',
+          navigatorKey: NavigatorKey().key,
+          initialLocation: isAuthenticated.isEmpty? '/login' : '/home',
           redirect: (context, state) {
             final loggingIn = state.fullPath == '/login';
-            if (isAuthenticated.isEmpty && !loggingIn) {
+            if (isAuthenticated.isEmpty && loggingIn) {
               return '/login';
             }
-            if (isAuthenticated.isNotEmpty && loggingIn) {
+            if (isAuthenticated.isNotEmpty && !loggingIn) {
               return '/home';
             }
             return null;

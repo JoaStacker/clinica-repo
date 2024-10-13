@@ -30,9 +30,4 @@ class AuthenticationService with NavegationServices{
     await _flutterSecureStorage.delete(key: 'auth_token');
     navigationReplace(path: '/login');
   }
-
-  Future<String> isAuthenticated() async {
-    // check if authentication token exists
-    return await _flutterSecureStorage.read(key: 'auth_token') ?? '';
-  }
 }

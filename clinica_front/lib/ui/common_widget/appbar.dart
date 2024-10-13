@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/colors.dart';
 
-class AppBarClinica extends StatefulWidget {
+class AppBarClinica extends StatelessWidget {
   const AppBarClinica({
     super.key,
     required this.size,
@@ -14,11 +14,6 @@ class AppBarClinica extends StatefulWidget {
   final Size size;
   final double width;
 
-  @override
-  State<AppBarClinica> createState() => _AppBarClinicaState();
-}
-
-class _AppBarClinicaState extends State<AppBarClinica> {
   @override
   Widget build(BuildContext context) {
     final authService = locator<AuthenticationService>();
@@ -31,11 +26,11 @@ class _AppBarClinicaState extends State<AppBarClinica> {
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(widget.size.width * 0.05),
+          bottom: Radius.circular(size.width * 0.05),
         ),
       ),
       title: Container(
-        width: widget.width,
+        width: width,
         padding: EdgeInsets.only(left: 20),
         child: Image.asset(
           'resources/images/appbar_clinica.png',
@@ -44,12 +39,8 @@ class _AppBarClinicaState extends State<AppBarClinica> {
       ),
       actions: [
         IconButton(
-          onPressed: () {
-            setState(() async {
-              await authService.logout();
-            });
-          }, 
-          icon: Icon(Icons.logout_outlined, size: widget.size.width * 0.02))
+          onPressed: authService.logout,          
+          icon: Icon(Icons.logout_outlined, size: size.width * 0.02))
       ],
     );
   }
