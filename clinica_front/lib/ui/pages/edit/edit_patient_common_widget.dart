@@ -24,7 +24,7 @@ class EditPatientCommonWidget extends StatelessWidget {
           ),
           Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: _EditFieldsAppBar(back: () => vm.navigatorPush('/home')),
+            appBar: _EditFieldsAppBar(back: () => vm.navigationReplace(path: '/home')),
             resizeToAvoidBottomInset: true,
             body: Form(
               key: vm.formKey,

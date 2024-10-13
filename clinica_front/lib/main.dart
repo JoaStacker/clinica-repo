@@ -28,28 +28,25 @@ class CentroClinico extends StatelessWidget {
 
         final isAuthenticated = snapshot.data!;
         final localRouter = GoRouter(
-          navigatorKey: NavigatorKey().key, // Use global navigator key
-          initialLocation: isAuthenticated.isEmpty ? '/home' : '/login', // Set initial route based on auth status
+          navigatorKey: NavigatorKey().key, 
+          initialLocation: isAuthenticated.isEmpty ? '/home' : '/login',
           redirect: (context, state) {
-            // If the user is not authenticated, always redirect to login
-            final bool loggingIn = state.fullPath!.contains('login');
-            if (isAuthenticated.isEmpty || !loggingIn) {
+            final loggingIn = state.fullPath == '/login';
+            if (isAuthenticated.isEmpty && !loggingIn) {
               return '/login';
             }
-            // If the user is authenticated and trying to go to login, redirect to home
-            if (isAuthenticated.isNotEmpty || loggingIn) {
+            if (isAuthenticated.isNotEmpty && loggingIn) {
               return '/home';
             }
-            return null; // No redirection needed
+            return null;
           },
-          routes: router, // Your list of routes
+          routes: router,
         );
 
         return MultiProvider(
           providers: routerViewModel,
           child: MaterialApp.router(
-            key: NavigatorKey().key,
-            routerConfig: localRouter, // Pass the routerConfig instead of individual delegates
+            routerConfig: localRouter,
             debugShowCheckedModeBanner: false,
             title: 'Centro Clínico',
           ),

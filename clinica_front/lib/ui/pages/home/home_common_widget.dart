@@ -105,7 +105,7 @@ class HomeScreenMobile extends StatelessWidget {
             child: AppBarClinica(size: size, width: width),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => viewModel.navigatorPush('/edit'),
+            onPressed: () => viewModel.navigationReplace(path: '/edit'),
             backgroundColor: kPrimaryColor,
             child: Icon(Icons.add, color: kWhitePure),
           ),
@@ -156,7 +156,7 @@ Expanded _pattientList(HomeViewModel viewModel, TextStyle textStyle1, TextStyle 
           padding: EdgeInsets.symmetric(horizontal: 15),
           itemBuilder: (BuildContext context, int index) {
             return AppPatientTile(
-              onTap: () => viewModel.navigatorPush('/patient'), // Pass the patient ID
+              onTap: () => viewModel.navigationReplace(path: '/patient', arguments: snapshot.data![index]), // Pass the patient ID
               body: _buildPatientDetails(snapshot.data![index].persona, 
               textStyle1, textStyle2, isDesktop: isDesktop));
           },
@@ -193,6 +193,6 @@ ElevatedButton _addPatient(String title, double width, HomeViewModel viewModel, 
         backgroundColor: kPrimaryColor,
         fixedSize: Size(width, 45),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-    onPressed: () => viewModel.navigatorPush('/edit'),
+    onPressed: () => viewModel.navigationReplace(path: '/edit'),
     child: Text(title, style: textTitle, overflow: TextOverflow.ellipsis));
 }
