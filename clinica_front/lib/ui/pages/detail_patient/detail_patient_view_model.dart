@@ -10,7 +10,7 @@ class DetailPatientViewModel extends ChangeNotifier with NavegationServices {
 
   Future<Paciente> getPatient(String patientId) async {
     final patientList = await pacientesRepositoryImp.getPaciente();
-    final patient = patientList.singleWhere((e) => e.personaId.toString() == patientId);
+    final patient = patientList.singleWhere((e) => e.pacienteId.toString() == patientId);
     _patient = patient;
     return patient;
   }

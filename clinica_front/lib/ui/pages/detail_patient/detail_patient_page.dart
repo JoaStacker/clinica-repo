@@ -9,9 +9,9 @@ class DetailPatientPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (BuildContext context) => DetailPatientCommonWidget(patientId: patientId, infoRowCount: 2),
-      tablet: (BuildContext context) => DetailPatientCommonWidget(patientId: patientId, infoRowCount: 3),
-      desktop: (BuildContext context) => DetailPatientCommonWidget(patientId: patientId, infoRowCount: 4),
+      mobile: (BuildContext context) => DetailPatientCommonWidget(patientId: patientId, infoRowCount: 2, width: 0.15),
+      tablet: (BuildContext context) => DetailPatientCommonWidget(patientId: patientId, infoRowCount: 3, width: 0.20),
+      desktop: (BuildContext context) => DetailPatientCommonWidget(patientId: patientId, infoRowCount: 4, width: 0.25),
     );
   }
 }

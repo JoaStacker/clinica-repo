@@ -1,21 +1,22 @@
 import 'package:clinica_front/core/colors.dart';
 import 'package:clinica_front/core/text.dart';
 import 'package:clinica_front/data/model/paciente.dart';
+import 'package:clinica_front/ui/common_widget/app_diagnostic_list.dart';
 import 'package:clinica_front/ui/pages/detail_patient/detail_patient_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DetailPatientCommonWidget extends StatelessWidget {
-  const DetailPatientCommonWidget({super.key, required this.patientId, required this.infoRowCount});
+  const DetailPatientCommonWidget({super.key, required this.patientId, required this.infoRowCount, required this.width});
   final String patientId;
-  final int infoRowCount; // New parameter
+  final int infoRowCount;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        body: SingleChildScrollView(
-            child: Consumer<DetailPatientViewModel>(builder: (BuildContext context, DetailPatientViewModel vm, Widget? child) {
+        body: Consumer<DetailPatientViewModel>(builder: (BuildContext context, DetailPatientViewModel vm, Widget? child) {
           return FutureBuilder<Paciente>(
             future: vm.getPatient(patientId), // Fetch patient data
             builder: (context, snapshot) {
@@ -32,6 +33,7 @@ class DetailPatientCommonWidget extends StatelessWidget {
                         image: AssetImage('resources/images/patient_tile_background_screen.png'), fit: BoxFit.cover, scale: 4),
                   ),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                           height: height * 0.22,
@@ -48,11 +50,7 @@ class DetailPatientCommonWidget extends StatelessWidget {
                             color: kWhitePure,
                           ),
                           child: _headPatient(context, vm)),
-                      Padding(
-                        padding: EdgeInsets.all(40),
-                        child: ElevatedButton(
-                            style: buttonStyle(context), onPressed: () {}, child: Text('NUEVA EVOLUCIÓN', style: bottonStyle)),
-                      ),
+                      DiagnosticList(width: width)
                     ],
                   ),
                 );
@@ -60,7 +58,7 @@ class DetailPatientCommonWidget extends StatelessWidget {
               return SizedBox(); // Fallback if no data
             },
           );
-        })));
+        }));
   }
 
   Row _backButtonAndName(DetailPatientViewModel viewModel) {
@@ -117,11 +115,6 @@ class DetailPatientCommonWidget extends StatelessWidget {
       Spacer(),
     ]);
   }
-
-  buttonStyle(BuildContext context) => ElevatedButton.styleFrom(
-      fixedSize: Size(350, 50),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      backgroundColor: kTernary100);
 
   Column _headPatient(BuildContext context, DetailPatientViewModel vm) {
     return Column(

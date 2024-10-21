@@ -35,9 +35,6 @@ class CentroClinico extends StatelessWidget {
             if (isAuthenticated.isEmpty && loggingIn) {
               return '/login';
             }
-            if (isAuthenticated.isNotEmpty && !loggingIn) {
-              return '/home';
-            }
             return null;
           },
           routes: router,
