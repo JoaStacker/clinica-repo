@@ -12,6 +12,7 @@ TextStyle bottonStyle = const TextStyle(fontSize: 14, fontWeight: FontWeight.w40
 TextStyle purpuleStyle = const TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: bottonColor);
 TextStyle textStyle24 = const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: kPrimaryColor);
 TextStyle textBlackStyle24 =  TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey);
+TextStyle textGreenStyle24 =  TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: Colors.green);
 TextStyle textStyle14 = const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kPrimaryColor);
 TextStyle textBlackStyle14 = const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey);
 TextStyle textGrayStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey);
