@@ -50,7 +50,7 @@ class DetailPatientCommonWidget extends StatelessWidget {
                             color: kWhitePure,
                           ),
                           child: _headPatient(context, vm)),
-                      DiagnosticList(width: width)
+                      DiagnosticList(width: width, viewModel: vm)
                     ],
                   ),
                 );
