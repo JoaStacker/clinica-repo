@@ -168,14 +168,16 @@ Expanded _pattientList(HomeViewModel viewModel, TextStyle textStyle1, TextStyle 
 
 Widget _buildPatientDetails(Persona persona, TextStyle textStyle1, TextStyle textStyle2,{bool isDesktop = false}) {
   String direction = '${persona.direccion.calle} ${persona.direccion.altura}, ${persona.direccion.localidad}, ${persona.direccion.provincia}';
-  return isDesktop ? Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
-    children: [
-        Text(persona.nombreApellido, style: textStyle1),
-        Text(persona.dni, style: textStyle2),
-        Text(direction, style: textStyle2),
-    ],
+  return isDesktop ? Expanded(
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+          Expanded(child: Text(persona.nombreApellido, style: textStyle1)),
+          Expanded(child: Text('DNI: ${persona.dni}', style: textStyle2)),
+          Expanded(child: Text(direction, style: textStyle2)),
+      ],
+    ),
   ) : Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.spaceAround,
