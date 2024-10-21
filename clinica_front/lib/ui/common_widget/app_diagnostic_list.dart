@@ -1,10 +1,12 @@
 import 'package:clinica_front/core/colors.dart';
 import 'package:clinica_front/core/text.dart';
+import 'package:clinica_front/ui/pages/detail_patient/detail_patient_view_model.dart';
 import 'package:flutter/material.dart';
 
 class DiagnosticList extends StatelessWidget {
-  const DiagnosticList({super.key, required this.width});
+  const DiagnosticList({super.key, required this.width, required this.viewModel});
   final double width;
+  final DetailPatientViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,9 @@ class DiagnosticList extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(20),
             child:
-                ElevatedButton(style: buttonStyle(context), onPressed: () {}, child: Text('NUEVA EVOLUCIÓN', style: bottonStyle)),
+                ElevatedButton(style: buttonStyle(context),
+                onPressed: () => viewModel.navigationReplace(path: '/patient/${viewModel.patient.pacienteId}/evolution'), 
+                child: Text('NUEVA EVOLUCIÓN', style: bottonStyle)),
           ),
           Expanded(
             child: ListView.builder(
