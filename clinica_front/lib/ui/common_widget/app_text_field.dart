@@ -20,6 +20,7 @@ class AppTextField extends StatelessWidget {
       this.prefixIcon,
       this.suffixIcon,
       this.radius = 15,
+      this.maxLine = 1,
       this.textCapitalization = TextCapitalization.none});
 
   final EdgeInsets scrollPadding;
@@ -38,6 +39,7 @@ class AppTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final double radius;
+  final int maxLine;
   final TextCapitalization textCapitalization;
 
   @override
@@ -55,6 +57,7 @@ class AppTextField extends StatelessWidget {
         obscureText: passwordField,
         obscuringCharacter: '*',
         maxLength: maxLength,
+        maxLines: maxLine,
         keyboardType: textInputType,
         onChanged: onChange,
         textCapitalization: textCapitalization,
