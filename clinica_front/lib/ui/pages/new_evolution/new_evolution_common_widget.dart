@@ -2,6 +2,7 @@ import 'package:clinica_front/core/colors.dart';
 import 'package:clinica_front/core/text.dart';
 import 'package:clinica_front/data/model/paciente.dart';
 import 'package:clinica_front/enum/enum_diagnostics.dart';
+import 'package:clinica_front/ui/common_widget/app_medication_list.dart';
 import 'package:clinica_front/ui/common_widget/app_text_field.dart';
 import 'package:clinica_front/ui/pages/new_evolution/new_evolution_view_model.dart';
 import 'package:flutter/material.dart';
@@ -53,12 +54,15 @@ class NewEvolutionCommonWidget extends StatelessWidget {
                             ),
                             child: _backButtonAndName(vm, context)),
                         _bodyEvolution(vm, context),
-                        Padding(
-                          padding: EdgeInsets.all(20),
-                          child: ElevatedButton(
-                              style: buttonStyle(context),
-                              onPressed: () {},
-                              child: Text('REGISTRAR EVOLUCIÓN', style: bottonStyle)),
+                        Visibility(
+                          visible: vm.diagnosticString.isNotEmpty,
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: ElevatedButton(
+                                style: buttonStyle(context),
+                                onPressed: () {},
+                                child: Text('REGISTRAR EVOLUCIÓN', style: bottonStyle)),
+                          ),
                         ),
                       ],
                     ),
@@ -129,33 +133,35 @@ class NewEvolutionCommonWidget extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 20),
-          DropdownMenu<Diagnostics>(
-            controller: viewModel.diagosticController,
-            enableFilter: true,
-            width: 350,
-            requestFocusOnTap: true,
-            leadingIcon: const Icon(Icons.search, color: kPrimaryColor),
-            label: const Text('Diagnosticos'),
-            inputDecorationTheme: const InputDecorationTheme(
-              filled: false,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                borderSide: BorderSide(color: Colors.grey),
-              ),
+          _buildDiagnosticComponent(viewModel),
+          SizedBox(height: 20),
+          _buildDigitalRecipe(viewModel, context),
+          SizedBox(height: 10),
+          _buildLaboratoryDelivery(viewModel, context),
+          SizedBox(height: 10),
+          Visibility(
+            visible: viewModel.diagnosticString.isNotEmpty,
+            child: AppTextField(
+              labelText: 'Observaciones de la evolución',
+              labelStyle: hintStyle,
+              scrollPadding: EdgeInsets.only(bottom: 40),
+              controller: viewModel.obsEvol,
+              textInputType: TextInputType.text,
+              maxLine: 3,
+              textCapitalization: TextCapitalization.characters,
             ),
-            onSelected: null,
-            dropdownMenuEntries: Diagnostics.values.map<DropdownMenuEntry<Diagnostics>>(
-              (Diagnostics diagnosticos) {
-                return DropdownMenuEntry<Diagnostics>(
-                  value: diagnosticos,
-                  label: diagnosticos.value,
-                );
-              },
-            ).toList(),
           ),
-          SizedBox(height: 20),
-          MedicationListScreen(),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
+  Visibility _buildDigitalRecipe(NewEvolutionViewModel viewModel, BuildContext context) {
+    return Visibility(
+      visible: viewModel.diagnosticString.isNotEmpty,
+      child: Column(
+        children: [
           GestureDetector(
             onTap: null,
             child: Container(
@@ -173,19 +179,29 @@ class NewEvolutionCommonWidget extends StatelessWidget {
               onPressed: () => viewModel.changeDigitalRecipe(),
               child: Text('Receta Digital', style: bottonStyle)),
           SizedBox(height: 10),
+          Visibility(visible: viewModel.isDigitalRecipe, child: MedicationListScreen()),
+          SizedBox(height: 10),
           Visibility(
             visible: viewModel.isDigitalRecipe,
             child: AppTextField(
               labelText: 'Instrucciones de recetas',
               labelStyle: hintStyle,
               scrollPadding: EdgeInsets.only(bottom: 40),
-              controller: viewModel.obsEvol,
+              controller: viewModel.obsRecipe,
               textInputType: TextInputType.text,
               maxLine: 2,
               textCapitalization: TextCapitalization.characters,
             ),
           ),
-          SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
+  Visibility _buildLaboratoryDelivery(NewEvolutionViewModel viewModel, BuildContext context) {
+    return Visibility(
+        visible: viewModel.diagnosticString.isNotEmpty,
+        child: Column(children: [
           ElevatedButton(
               style: buttonStyle(context, color: viewModel.isLaboratoryDelivery ? kPrimaryColor : Colors.transparent),
               onPressed: () => viewModel.changeLaboratoryDelivery(),
@@ -194,10 +210,10 @@ class NewEvolutionCommonWidget extends StatelessWidget {
           Visibility(
             visible: viewModel.isLaboratoryDelivery,
             child: AppTextField(
-              labelText: 'Observaciones',
+              labelText: 'Observaciones del pedido',
               labelStyle: hintStyle,
               scrollPadding: EdgeInsets.only(bottom: 40),
-              controller: viewModel.obsEvol,
+              controller: viewModel.obsDelivery,
               textInputType: TextInputType.text,
               maxLine: 3,
               textCapitalization: TextCapitalization.characters,
@@ -218,122 +234,70 @@ class NewEvolutionCommonWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
-          AppTextField(
-            labelText: 'Observaciones',
-            labelStyle: hintStyle,
-            scrollPadding: EdgeInsets.only(bottom: 40),
-            controller: viewModel.obsEvol,
-            textInputType: TextInputType.text,
-            maxLine: 3,
-            textCapitalization: TextCapitalization.characters,
-          ),
-          SizedBox(height: 10),
-        ],
-      ),
-    );
+        ]));
   }
-}
 
-
-class MedicationListScreen extends StatelessWidget {
-  const MedicationListScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
+  Row _buildDiagnosticComponent(NewEvolutionViewModel viewModel) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Column(
-            children: const [
-              Padding(
-                padding: EdgeInsets.all(15),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Medicamentos',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Dosis',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 40),
-                  ],
-                ),
-              ),
-              MedicationCard(medication: 'Tafirol (30 mg)', dose: 'Tomar 1 cada 12 hs'),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            '+ Nuevo medicamento',
-            style: text16Style
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class MedicationCard extends StatelessWidget {
-  final String medication;
-  final String dose;
-
-  const MedicationCard({
-    super.key,
-    required this.medication,
-    required this.dose,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Row(         
-              children: [
-                Expanded(
-                  child: Text(
-                    medication,
-                    style: textGrayStyle
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    dose,
-                    style: textGrayStyle
-                  ),
-                ),
-              ],
+        viewModel.addDiagnostic? 
+        DropdownMenu<NewDiagnostics>(
+          controller: viewModel.diagosticController,
+          enableFilter: true,
+          width: 285,
+          requestFocusOnTap: true,
+          leadingIcon: const Icon(Icons.search, color: kPrimaryColor),
+          label: const Text('Nuevos Diagnosticos'),
+          inputDecorationTheme: const InputDecorationTheme(
+            filled: false,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderSide: BorderSide(color: Colors.grey),
             ),
           ),
-          IconButton(
-            icon: Icon(Icons.edit_square, color: kPrimaryColor),
-            onPressed: () {
-              // Handle edit action
+          onSelected: (value) => viewModel.changeDiagnostic(value?.value ?? ''),
+          dropdownMenuEntries: NewDiagnostics.values.map<DropdownMenuEntry<NewDiagnostics>>(
+            (NewDiagnostics diagnosticos) {
+              return DropdownMenuEntry<NewDiagnostics>(
+                value: diagnosticos,
+                label: diagnosticos.value,
+              );
             },
+          ).toList(),
+        ) :
+        DropdownMenu<PreviusDiagnostics>(
+          controller: viewModel.diagosticController,
+          enableFilter: true,
+          width: 285,
+          requestFocusOnTap: true,
+          leadingIcon: const Icon(Icons.search, color: kPrimaryColor),
+          label: const Text('Diagnosticos Previos'),
+          inputDecorationTheme: const InputDecorationTheme(
+            filled: false,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderSide: BorderSide(color: Colors.grey),
+            ),
           ),
-        ],
-      ),
+          onSelected: (value) => viewModel.changeDiagnostic(value?.value ?? ''),
+          dropdownMenuEntries: PreviusDiagnostics.values.map<DropdownMenuEntry<PreviusDiagnostics>>(
+            (PreviusDiagnostics diagnosticos) {
+              return DropdownMenuEntry<PreviusDiagnostics>(
+                value: diagnosticos,
+                label: diagnosticos.value,
+              );
+            },
+          ).toList(),
+        ),
+        SizedBox(width: 10),
+        IconButton(
+          onPressed: () => viewModel.addNewDiagnostic(), 
+          icon: Icon(
+            viewModel.addDiagnostic? Icons.indeterminate_check_box_rounded : Icons.add_box_rounded, 
+            size: 30, color: kPrimaryColor)
+        )
+      ],
     );
   }
 }

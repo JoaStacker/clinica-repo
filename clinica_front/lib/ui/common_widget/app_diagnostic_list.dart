@@ -15,9 +15,9 @@ class DiagnosticList extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.all(20),
-            child:
-                ElevatedButton(style: buttonStyle(context),
-                onPressed: () => viewModel.navigationReplace(path: '/patient/${viewModel.patient.pacienteId}/evolution'), 
+            child: ElevatedButton(
+                style: buttonStyle(context),
+                onPressed: () => viewModel.navigationReplace(path: '/patient/${viewModel.patient.pacienteId}/evolution'),
                 child: Text('NUEVA EVOLUCIÓN', style: bottonStyle)),
           ),
           Expanded(
@@ -54,13 +54,12 @@ class DiagnosticList extends StatelessWidget {
 }
 
 class _DiagnosticCard extends StatelessWidget {
-  const _DiagnosticCard({
-    required this.diagnostico,
-    required this.tipoDeEvolucion,
-    required this.observaciones,
-    required this.fecha,
-    required this.hora
-  });
+  const _DiagnosticCard(
+      {required this.diagnostico,
+      required this.tipoDeEvolucion,
+      required this.observaciones,
+      required this.fecha,
+      required this.hora});
 
   final String diagnostico;
   final String tipoDeEvolucion;
@@ -82,21 +81,18 @@ class _DiagnosticCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  tipoDeEvolucion, //TODO:: PONER TIPO DE EVOLUCION
-                  style: textGreenStyle24,
-                ),
+                Text(diagnostico, style: textGreenStyle24),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(fecha, style: textBlackStyle14),
-                    Text(hora, style: textBlackStyle14)
-                  ],
+                  children: [Text(fecha, style: textBlackStyle14), Text(hora, style: textBlackStyle14)],
                 )
               ],
             ),
             SizedBox(height: 16),
-            Text(diagnostico, style: textBlackStyle24),
+            Text(
+              tipoDeEvolucion, //TODO:: PONER TIPO DE EVOLUCION
+              style: textBlackStyle24,
+            ),
             SizedBox(height: 8),
             Text(
               observaciones,
