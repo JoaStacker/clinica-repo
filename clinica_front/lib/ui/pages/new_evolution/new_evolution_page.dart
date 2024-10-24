@@ -9,9 +9,9 @@ class NewEvolutionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (BuildContext context) => NewEvolutionCommonWidget(patientId: patientId),
-      tablet: (BuildContext context) => NewEvolutionCommonWidget(patientId: patientId),
-      desktop: (BuildContext context) => NewEvolutionCommonWidget(patientId: patientId),
+      mobile: (BuildContext context) => NewEvolutionCommonWidget(patientId: patientId, width: MediaQuery.of(context).size.width * 0.15),
+      tablet: (BuildContext context) => NewEvolutionCommonWidget(patientId: patientId, width: MediaQuery.of(context).size.width * 0.20),
+      desktop: (BuildContext context) => NewEvolutionCommonWidget(patientId: patientId, width: MediaQuery.of(context).size.width * 0.25),
     );
   }
 }
