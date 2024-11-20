@@ -16,6 +16,7 @@ TextStyle textGreenStyle24 =  TextStyle(fontSize: 24, fontWeight: FontWeight.w60
 TextStyle textStyle14 = const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: kPrimaryColor);
 TextStyle textBlackStyle14 = const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey);
 TextStyle textGrayStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey);
+TextStyle text16Style = const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: kPrimaryColor);
 TextStyle hintStyle = const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w300, fontSize: 16, color: Colors.grey);
   
 
