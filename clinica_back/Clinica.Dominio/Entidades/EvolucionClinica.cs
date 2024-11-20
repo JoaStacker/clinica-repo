@@ -26,6 +26,7 @@ namespace Clinica.Dominio.Entidades
         public EvolucionClinica(string textoLibre)
         {
             TextoLibre = textoLibre;
+            FechaDeCreacion = DateTime.Now;
         }
     }
 }
