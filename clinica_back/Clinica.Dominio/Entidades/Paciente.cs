@@ -80,5 +80,15 @@ namespace Clinica.Dominio.Entidades
             Persona = nuevaPersona;
             HistoriaClinica = nuevaHistoriaClinica;
         }
+
+        public void agregarEvolucion(EvolucionDto evolucionDto)
+        {
+            HistoriaClinica.agregarEvolucion(evolucionDto);
+        }
+
+        public List<EvolucionClinica> buscarEvoluciones()
+        {
+            return HistoriaClinica.buscarEvoluciones();
+        }
     }
 }

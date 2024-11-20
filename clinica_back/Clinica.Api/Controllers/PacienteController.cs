@@ -56,5 +56,40 @@ namespace Clinica.Api.Controllers
                     new { message = "Error al crear el paciente.", error = sr.Message });
             }
         }
+
+        [HttpPost]
+        [Route("/evolucion")]
+        public async Task<IActionResult> agregarEvolucion([FromBody] EvolucionDto evolucionDto)
+        {
+            ServiceResponse sr = await _servicio.crearEvolucion(evolucionDto);
+
+            if (sr.Status == ServiceStatus.OK)
+            {
+                return CreatedAtAction(nameof(crearPaciente), sr.Content,
+                        new { message = "Evolucion creada con éxito.", sr.Content });
+            }
+            else
+            {
+                return StatusCode(sr.StatusCode,
+                    new { message = "Error al crear el evolucion.", error = sr.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("/evoluciones/{id}")]
+        public async Task<IActionResult> buscarEvoluciones(int idPaciente)
+        {
+            ServiceResponse sr = await _servicio.buscarEvoluciones(idPaciente);
+
+            if (sr.Status == ServiceStatus.OK)
+            {
+                return Ok(sr.Content);
+            }
+            else
+            {
+                return StatusCode(sr.StatusCode,
+                    new { message = "Error al crear el paciente.", error = sr.Message });
+            }
+        }
     }
 }

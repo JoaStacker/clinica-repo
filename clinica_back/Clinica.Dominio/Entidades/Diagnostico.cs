@@ -30,6 +30,8 @@ namespace Clinica.Dominio.Entidades
         // Navigation properties
         [JsonIgnore] // Prevent circular reference
         public virtual HistoriaClinica HistoriaClinica { get; set; }
+
+        [JsonIgnore] // Prevent circular reference
         public virtual ICollection<EvolucionClinica> EvolucionesClinicas { get; set; } = new HashSet<EvolucionClinica>();
 
         public Diagnostico() { }
@@ -39,6 +41,14 @@ namespace Clinica.Dominio.Entidades
             Observaciones = diagnosticoDto.Observaciones;
             FechaDeCreacion = diagnosticoDto.FechaDeCreacion;
             HistoriaClinica = historiaClinica;
+        }
+
+        public void agregarEvolucion(EvolucionDto evolucionDto)
+        {
+            EvolucionClinica evolucion = new EvolucionClinica(
+                evolucionDto.textoLibre
+            );
+            EvolucionesClinicas.Add(evolucion);
         }
     }
 }

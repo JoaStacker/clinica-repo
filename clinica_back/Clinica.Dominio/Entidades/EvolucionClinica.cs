@@ -22,5 +22,10 @@ namespace Clinica.Dominio.Entidades
 
         // Navigation properties
         public virtual Diagnostico Diagnostico { get; set; }
+
+        public EvolucionClinica(string textoLibre)
+        {
+            TextoLibre = textoLibre;
+        }
     }
 }

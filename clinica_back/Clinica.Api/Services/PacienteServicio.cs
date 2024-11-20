@@ -72,5 +72,80 @@ namespace Clinica.Api.Services
             }
             
         }
+
+        public async Task<ServiceResponse> crearEvolucion(EvolucionDto evolucionDto)
+        {
+            try
+            {
+                Paciente paciente = _repositorioPaciente.Get(evolucionDto.PacienteId);
+
+                if (paciente == null)
+                {
+                    return new ServiceResponse(
+                        ServiceStatus.ERROR,
+                        StatusCodes.Status409Conflict,
+                        "El paciente no existe"
+                    );
+                }
+
+                paciente.agregarEvolucion(evolucionDto);
+
+                _repositorioPaciente.Modificar(paciente);
+                _repositorioPaciente.ConfirmarCambios();
+                _repositorioPaciente.Dispose();
+
+                return new ServiceResponse(
+                    ServiceStatus.OK,
+                    StatusCodes.Status200OK,
+                    "Evolucion creada con éxito"
+                );
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse(
+                    ServiceStatus.ERROR,
+                    StatusCodes.Status500InternalServerError,
+                    ex.Message
+                );
+            }
+
+        }
+
+        public async Task<ServiceResponse> buscarEvoluciones(int idPaciente)
+        {
+            try
+            {
+                Paciente paciente = _repositorioPaciente.Get(idPaciente);
+
+                if (paciente == null)
+                {
+                    return new ServiceResponse(
+                        ServiceStatus.ERROR,
+                        StatusCodes.Status409Conflict,
+                        "El paciente no existe"
+                    );
+                }
+
+                List<EvolucionClinica> evoluciones = paciente.buscarEvoluciones();
+
+                _repositorioPaciente.Dispose();
+
+                return new ServiceResponse(
+                    ServiceStatus.OK,
+                    StatusCodes.Status200OK,
+                    "evoluciones listadas con exito",
+                    evoluciones
+                );
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse(
+                    ServiceStatus.ERROR,
+                    StatusCodes.Status500InternalServerError,
+                    ex.Message
+                );
+            }
+
+        }
     }
 }

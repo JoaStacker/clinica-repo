@@ -57,5 +57,6 @@ namespace Clinica.Api.Controllers
                     new { message = "Error al crear el diagnostico.", error = sr.Message });
             }
         }
+
     }
 }
