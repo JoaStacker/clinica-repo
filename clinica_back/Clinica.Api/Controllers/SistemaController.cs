@@ -4,7 +4,7 @@ using Clinica.Api.Services;
 
 namespace Clinica.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class SistemaController : ControllerBase
     {
@@ -16,6 +16,7 @@ namespace Clinica.Api.Controllers
         }
 
         [HttpGet]
+        [Route("/pacientes")]
         public async Task<IActionResult> listarPacientes()
         {
             ServiceResponse sr = await _servicio.listarPacientes();
@@ -23,6 +24,7 @@ namespace Clinica.Api.Controllers
         }
 
         [HttpPost]
+        [Route("/pacientes")]
         public async Task<IActionResult> crearPaciente([FromBody] PacienteDto pacienteDto)
         {
             // Check for required fields
