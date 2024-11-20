@@ -5,10 +5,14 @@ namespace Clinica.Api.Services
 {
     public interface IPacienteServicio
     {
-        public Task<ServiceResponse> GetAllPacientes();
+        public Task<ServiceResponse> listarPacientes();
         public Task<ServiceResponse> crearPaciente(PacienteDto nuevoPaciente);
 
-        public Task<ServiceResponse> crearEvolucion(EvolucionDto evolucion);
+        public Task<ServiceResponse> crearEvolucion(int idPaciente, EvolucionDto evolucion);
         public Task<ServiceResponse> buscarEvoluciones(int idPaciente);
+
+        public Task<ServiceResponse> agregarDiagnosticoAHistoriaClinica(int idPaciente, DiagnosticoDto diagnosticoDto);
+
+        public Task<ServiceResponse> buscarDiagnosticosPrevios(int idPaciente);
     }
 }

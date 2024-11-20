@@ -94,7 +94,6 @@ builder.Services.AddScoped<IRepositorio<EntidadBase>, Repositorio<EntidadBase>>(
 // Agregar sevicios.
 builder.Services.AddScoped<IPacienteServicio, PacienteServicio>();
 builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
-builder.Services.AddScoped<IDiagnosticoServicio, DiagnosticoServicio>();
 
 // Agregar controladores a los servicios.
 builder.Services.AddControllers();

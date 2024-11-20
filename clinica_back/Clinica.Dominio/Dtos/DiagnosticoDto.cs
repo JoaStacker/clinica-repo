@@ -12,7 +12,5 @@ namespace Clinica.Dominio.Dtos
     {
         public string Enfermedad { get; set; }
         public string Observaciones { get; set; }
-        public DateTime FechaDeCreacion { get; set; }
-        public int HistoriaClinicaID { get; set; }
     }
 }

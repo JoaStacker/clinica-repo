@@ -12,7 +12,7 @@ namespace Clinica.Api.Services
         {
             _repositorioPaciente = new Repositorio<Paciente>(context);
         }
-        public async Task<ServiceResponse> GetAllPacientes()
+        public async Task<ServiceResponse> listarPacientes()
         {
             try
             {
@@ -73,11 +73,11 @@ namespace Clinica.Api.Services
             
         }
 
-        public async Task<ServiceResponse> crearEvolucion(EvolucionDto evolucionDto)
+        public async Task<ServiceResponse> crearEvolucion(int idPaciente, EvolucionDto evolucionDto)
         {
             try
             {
-                Paciente paciente = _repositorioPaciente.Get(evolucionDto.PacienteId);
+                Paciente paciente = _repositorioPaciente.Get(idPaciente);
 
                 if (paciente == null)
                 {
@@ -135,6 +135,81 @@ namespace Clinica.Api.Services
                     StatusCodes.Status200OK,
                     "evoluciones listadas con exito",
                     evoluciones
+                );
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse(
+                    ServiceStatus.ERROR,
+                    StatusCodes.Status500InternalServerError,
+                    ex.Message
+                );
+            }
+
+        }
+
+        public async Task<ServiceResponse> agregarDiagnosticoAHistoriaClinica(int idPaciente, DiagnosticoDto diagnosticoDto)
+        {
+            try
+            {
+                Paciente paciente = _repositorioPaciente.Get(idPaciente);
+
+                if (paciente == null)
+                {
+                    return new ServiceResponse(
+                        ServiceStatus.ERROR,
+                        StatusCodes.Status409Conflict,
+                        "El paciente no existe"
+                    );
+                }
+
+                paciente.agregarDiagnosticoAHistoriaClinica(diagnosticoDto);
+
+                _repositorioPaciente.Modificar(paciente);
+                _repositorioPaciente.ConfirmarCambios();
+                _repositorioPaciente.Dispose();
+
+                return new ServiceResponse(
+                    ServiceStatus.OK,
+                    StatusCodes.Status200OK,
+                    "Evolucion creada con éxito"
+                );
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse(
+                    ServiceStatus.ERROR,
+                    StatusCodes.Status500InternalServerError,
+                    ex.Message
+                );
+            }
+
+        }
+
+        public async Task<ServiceResponse> buscarDiagnosticosPrevios(int idPaciente)
+        {
+            try
+            {
+                Paciente paciente = _repositorioPaciente.Get(idPaciente);
+
+                if (paciente == null)
+                {
+                    return new ServiceResponse(
+                        ServiceStatus.ERROR,
+                        StatusCodes.Status409Conflict,
+                        "El paciente no existe"
+                    );
+                }
+
+                List<Diagnostico> diagnosticos = paciente.buscarDiagnosticos();
+
+                _repositorioPaciente.Dispose();
+
+                return new ServiceResponse(
+                    ServiceStatus.OK,
+                    StatusCodes.Status200OK,
+                    "Diagnosticos listados con exito",
+                    diagnosticos
                 );
             }
             catch (Exception ex)

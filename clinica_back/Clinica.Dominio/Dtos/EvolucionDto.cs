@@ -10,10 +10,9 @@ namespace Clinica.Dominio.Dtos
 {
     public class EvolucionDto
     {
-        public int PacienteId { get; set; }
-
         public int DiagnosticoId { get; set; }
 
         public string textoLibre { get; set; }
+
     }
 }

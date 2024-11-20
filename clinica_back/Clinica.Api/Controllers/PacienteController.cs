@@ -16,9 +16,9 @@ namespace Clinica.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> listarPacientes()
         {
-            ServiceResponse sr = await _servicio.GetAllPacientes();
+            ServiceResponse sr = await _servicio.listarPacientes();
             return Ok(sr.Content);
         }
 
@@ -58,10 +58,10 @@ namespace Clinica.Api.Controllers
         }
 
         [HttpPost]
-        [Route("/evolucion")]
-        public async Task<IActionResult> agregarEvolucion([FromBody] EvolucionDto evolucionDto)
+        [Route("/{id}/evoluciones")]
+        public async Task<IActionResult> agregarEvolucion(int idPaciente, [FromBody] EvolucionDto evolucionDto)
         {
-            ServiceResponse sr = await _servicio.crearEvolucion(evolucionDto);
+            ServiceResponse sr = await _servicio.crearEvolucion(idPaciente, evolucionDto);
 
             if (sr.Status == ServiceStatus.OK)
             {
@@ -76,10 +76,44 @@ namespace Clinica.Api.Controllers
         }
 
         [HttpGet]
-        [Route("/evoluciones/{id}")]
+        [Route("/{id}/evoluciones")]
         public async Task<IActionResult> buscarEvoluciones(int idPaciente)
         {
             ServiceResponse sr = await _servicio.buscarEvoluciones(idPaciente);
+
+            if (sr.Status == ServiceStatus.OK)
+            {
+                return Ok(sr.Content);
+            }
+            else
+            {
+                return StatusCode(sr.StatusCode,
+                    new { message = "Error al crear el paciente.", error = sr.Message });
+            }
+        }
+
+        [HttpPost]
+        [Route("/{id}/diagnosticos")]
+        public async Task<IActionResult> agregarDiagnosticoAHistoriaClinica(int idPaciente, [FromBody] DiagnosticoDto diagnosticoDto)
+        {
+            ServiceResponse sr = await _servicio.agregarDiagnosticoAHistoriaClinica(idPaciente, diagnosticoDto);
+
+            if (sr.Status == ServiceStatus.OK)
+            {
+                return Ok(sr.Content);
+            }
+            else
+            {
+                return StatusCode(sr.StatusCode,
+                    new { message = "Error al crear el paciente.", error = sr.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("/{id}/diagnosticos")]
+        public async Task<IActionResult> listarDiagnosticosPrevios(int idPaciente)
+        {
+            ServiceResponse sr = await _servicio.buscarDiagnosticosPrevios(idPaciente);
 
             if (sr.Status == ServiceStatus.OK)
             {

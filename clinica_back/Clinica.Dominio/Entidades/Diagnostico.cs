@@ -35,12 +35,11 @@ namespace Clinica.Dominio.Entidades
         public virtual ICollection<EvolucionClinica> EvolucionesClinicas { get; set; } = new HashSet<EvolucionClinica>();
 
         public Diagnostico() { }
-        public Diagnostico(DiagnosticoDto diagnosticoDto, HistoriaClinica historiaClinica)
+        public Diagnostico(string enfermedad, string observaciones)
         {
-            Enfermedad = diagnosticoDto.Enfermedad;
-            Observaciones = diagnosticoDto.Observaciones;
-            FechaDeCreacion = diagnosticoDto.FechaDeCreacion;
-            HistoriaClinica = historiaClinica;
+            Enfermedad = enfermedad;
+            Observaciones = observaciones;
+            FechaDeCreacion = DateTime.Now;
         }
 
         public void agregarEvolucion(EvolucionDto evolucionDto)

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Clinica.Dominio.Dtos;
 
 namespace Clinica.Dominio.Entidades
@@ -15,7 +16,12 @@ namespace Clinica.Dominio.Entidades
         public DateTime FechaDeCreacion { get; set; }
 
         // Navigation properties
+        [JsonIgnore]
         public virtual ICollection<Diagnostico> Diagnosticos { get; set; } = new HashSet<Diagnostico>();
+
+        public HistoriaClinica() {
+            FechaDeCreacion = DateTime.Now;
+        }
 
         public void agregarEvolucion(EvolucionDto evolucionDto)
         {
@@ -35,5 +41,21 @@ namespace Clinica.Dominio.Entidades
         {
             return Diagnosticos.SelectMany(d => d.EvolucionesClinicas).ToList(); 
         } 
+
+        public void agregarDiagnostico(DiagnosticoDto diagnosticoDto)
+        {
+            Diagnostico diagnostico = new Diagnostico
+            (
+                diagnosticoDto.Enfermedad,
+                diagnosticoDto.Observaciones
+            );
+            Diagnosticos.Add(diagnostico);
+        }
+
+        public List<Diagnostico> buscarDiagnosticos()
+        {
+            return Diagnosticos.ToList();
+        }
+        
     }
 }

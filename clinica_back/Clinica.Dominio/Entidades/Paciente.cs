@@ -72,10 +72,7 @@ namespace Clinica.Dominio.Entidades
 
             Persona nuevaPersona = new Persona(personaDto);
 
-            HistoriaClinica nuevaHistoriaClinica= new HistoriaClinica
-            {
-                FechaDeCreacion = DateTime.Now
-            };  
+            HistoriaClinica nuevaHistoriaClinica= new HistoriaClinica();  
 
             Persona = nuevaPersona;
             HistoriaClinica = nuevaHistoriaClinica;
@@ -90,5 +87,16 @@ namespace Clinica.Dominio.Entidades
         {
             return HistoriaClinica.buscarEvoluciones();
         }
+
+        public void agregarDiagnosticoAHistoriaClinica(DiagnosticoDto diagnosticoDto)
+        {
+            HistoriaClinica.agregarDiagnostico(diagnosticoDto);
+        }
+
+        public List<Diagnostico> buscarDiagnosticos()
+        {
+            return HistoriaClinica.buscarDiagnosticos();
+        }
+        
     }
 }
