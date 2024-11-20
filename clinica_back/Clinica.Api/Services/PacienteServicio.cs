@@ -73,6 +73,61 @@ namespace Clinica.Api.Services
             
         }
 
+        public async Task<ServiceResponse> ObtenerHistoriaClinicaConEvoluciones(int idPaciente)
+        {
+            try
+            {
+                Paciente paciente = _repositorioPaciente.Get(idPaciente);
+
+                if (paciente == null)
+                {
+                    return new ServiceResponse(
+                        ServiceStatus.ERROR,
+                        StatusCodes.Status409Conflict,
+                        "El paciente no existe"
+                    );
+                }
+
+                HistoriaClinica historiaClinica = paciente.ObtenerHistoriaClinica();
+                var historiaClinicaCompleta = historiaClinica.Diagnosticos
+                    .ToList()
+                    .Select(diagnostico => new 
+                    {
+                        diagnosticoID = diagnostico.DiagnosticoID,
+                        enfermedad = diagnostico.Enfermedad,
+                        observaciones = diagnostico.Observaciones,
+                        evoluciones = diagnostico.EvolucionesClinicas.Select(evolucion => new
+                        {
+                            TextoLibre = evolucion.TextoLibre,
+                            FechaCreacion = evolucion.FechaDeCreacion
+                        }).ToList()
+                    }).ToList();
+
+                var resultado = new
+                {
+                    pacienteID = paciente.PacienteID,
+                    dni = paciente.Persona.Dni,
+                    nombreApellido = paciente.Persona.NombreApellido,
+                    historiaClinica=historiaClinicaCompleta
+                };
+                return new ServiceResponse(
+                    ServiceStatus.OK,
+                    StatusCodes.Status200OK,
+                    "Historia clinica devuelta con exito",
+                    resultado
+                );
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse(
+                    ServiceStatus.ERROR,
+                    StatusCodes.Status500InternalServerError,
+                    ex.Message
+                );
+            }
+
+        }
+
         public async Task<ServiceResponse> crearEvolucion(int idPaciente, EvolucionDto evolucionDto)
         {
             try
@@ -98,43 +153,6 @@ namespace Clinica.Api.Services
                     ServiceStatus.OK,
                     StatusCodes.Status200OK,
                     "Evolucion creada con éxito"
-                );
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponse(
-                    ServiceStatus.ERROR,
-                    StatusCodes.Status500InternalServerError,
-                    ex.Message
-                );
-            }
-
-        }
-
-        public async Task<ServiceResponse> buscarEvoluciones(int idPaciente)
-        {
-            try
-            {
-                Paciente paciente = _repositorioPaciente.Get(idPaciente);
-
-                if (paciente == null)
-                {
-                    return new ServiceResponse(
-                        ServiceStatus.ERROR,
-                        StatusCodes.Status409Conflict,
-                        "El paciente no existe"
-                    );
-                }
-
-                List<EvolucionClinica> evoluciones = paciente.buscarEvoluciones();
-
-                _repositorioPaciente.Dispose();
-
-                return new ServiceResponse(
-                    ServiceStatus.OK,
-                    StatusCodes.Status200OK,
-                    "evoluciones listadas con exito",
-                    evoluciones
                 );
             }
             catch (Exception ex)

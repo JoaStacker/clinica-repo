@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Clinica.Dominio.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace Clinica.Dominio.Entidades
 {
@@ -37,11 +38,6 @@ namespace Clinica.Dominio.Entidades
             }
         }
 
-        public List<EvolucionClinica> buscarEvoluciones()
-        {
-            return Diagnosticos.SelectMany(d => d.EvolucionesClinicas).ToList(); 
-        } 
-
         public void agregarDiagnostico(DiagnosticoDto diagnosticoDto)
         {
             Diagnostico diagnostico = new Diagnostico
@@ -56,6 +52,5 @@ namespace Clinica.Dominio.Entidades
         {
             return Diagnosticos.ToList();
         }
-        
     }
 }

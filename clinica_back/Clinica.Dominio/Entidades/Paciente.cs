@@ -83,11 +83,6 @@ namespace Clinica.Dominio.Entidades
             HistoriaClinica.agregarEvolucion(evolucionDto);
         }
 
-        public List<EvolucionClinica> buscarEvoluciones()
-        {
-            return HistoriaClinica.buscarEvoluciones();
-        }
-
         public void agregarDiagnosticoAHistoriaClinica(DiagnosticoDto diagnosticoDto)
         {
             HistoriaClinica.agregarDiagnostico(diagnosticoDto);
@@ -98,5 +93,9 @@ namespace Clinica.Dominio.Entidades
             return HistoriaClinica.buscarDiagnosticos();
         }
         
+        public HistoriaClinica ObtenerHistoriaClinica()
+        {
+            return HistoriaClinica;
+        }
     }
 }
