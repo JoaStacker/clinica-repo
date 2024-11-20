@@ -45,7 +45,7 @@ namespace Clinica.Dominio.Entidades
         public void agregarEvolucion(EvolucionDto evolucionDto)
         {
             EvolucionClinica evolucion = new EvolucionClinica(
-                evolucionDto.textoLibre
+                evolucionDto.TextoLibre
             );
             EvolucionesClinicas.Add(evolucion);
         }

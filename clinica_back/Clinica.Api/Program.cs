@@ -92,7 +92,7 @@ builder.Services.AddAuthentication(config =>{
 builder.Services.AddScoped<IRepositorio<EntidadBase>, Repositorio<EntidadBase>>();
 
 // Agregar sevicios.
-builder.Services.AddScoped<IPacienteServicio, PacienteServicio>();
+builder.Services.AddScoped<ISistemaServicio, SistemaServicio>();
 builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
 
 // Agregar controladores a los servicios.

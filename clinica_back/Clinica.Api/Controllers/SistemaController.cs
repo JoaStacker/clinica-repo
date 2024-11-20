@@ -6,11 +6,11 @@ namespace Clinica.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PacienteController : ControllerBase
+    public class SistemaController : ControllerBase
     {
-        private readonly IPacienteServicio _servicio;
+        private readonly ISistemaServicio _servicio;
 
-        public PacienteController(IPacienteServicio servicio)
+        public SistemaController(ISistemaServicio servicio)
         {
             _servicio = servicio;
         }

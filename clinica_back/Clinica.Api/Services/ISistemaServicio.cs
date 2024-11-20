@@ -3,7 +3,7 @@ using Clinica.Dominio.Entidades;
 
 namespace Clinica.Api.Services
 {
-    public interface IPacienteServicio
+    public interface ISistemaServicio
     {
         public Task<ServiceResponse> listarPacientes();
         public Task<ServiceResponse> crearPaciente(PacienteDto nuevoPaciente);

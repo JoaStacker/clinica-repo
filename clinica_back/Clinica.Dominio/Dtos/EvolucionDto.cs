@@ -12,7 +12,7 @@ namespace Clinica.Dominio.Dtos
     {
         public int DiagnosticoId { get; set; }
 
-        public string textoLibre { get; set; }
+        public string TextoLibre { get; set; }
 
     }
 }

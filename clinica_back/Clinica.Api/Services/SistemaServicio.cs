@@ -4,11 +4,11 @@ using Clinica.Infraestructura.Datos;
 
 namespace Clinica.Api.Services
 {
-    public class PacienteServicio: IPacienteServicio
+    public class SistemaServicio: ISistemaServicio
     {
         Repositorio<Paciente> _repositorioPaciente;
 
-        public PacienteServicio(ClinicaContext context)
+        public SistemaServicio(ClinicaContext context)
         {
             _repositorioPaciente = new Repositorio<Paciente>(context);
         }
