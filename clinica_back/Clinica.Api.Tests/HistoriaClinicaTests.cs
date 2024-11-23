@@ -40,7 +40,7 @@ namespace Clinica.Api.Tests
             var evolucionDto = new EvolucionDto
             {
                 DiagnosticoId = historiaClinica.Diagnosticos.First().DiagnosticoID,
-                TextoLibre = "Se receta Paracetamol."
+                Informe = "Se receta Paracetamol."
             };
 
             // Ejecutar (Act)
@@ -49,7 +49,7 @@ namespace Clinica.Api.Tests
             // Verificar (Assert)
             var diagnostico = historiaClinica.Diagnosticos.First();
             diagnostico.EvolucionesClinicas.Should().HaveCount(1);
-            diagnostico.EvolucionesClinicas.First().TextoLibre.Should().Be("Se receta Paracetamol.");
+            diagnostico.EvolucionesClinicas.First().Informe.Should().Be("Se receta Paracetamol.");
         }
 
         [Fact]

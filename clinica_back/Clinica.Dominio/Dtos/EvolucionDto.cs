@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Clinica.Dominio.Dtos
+﻿namespace Clinica.Dominio.Dtos
 {
     public class EvolucionDto
     {
         public int DiagnosticoId { get; set; }
 
-        public string TextoLibre { get; set; }
-
+        // Evolucion simple.
+        public string Informe { get; set; }
+        
+        // Pedido de Laboratorio.
+        public string? TextoPedido { get; set; } = null;
+        
+        // Receta Digital.
+        public List<MedicamentoDto>? Medicamentos { get; set; } = null;  // Lista de codigos de los medicamentos.
+        public string? Indicaciones { get; set; } = null; // Lista de indicaciones de los medicamentos.
     }
 }

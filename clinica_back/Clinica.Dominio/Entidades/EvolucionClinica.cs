@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Clinica.Dominio.Dtos;
 
 namespace Clinica.Dominio.Entidades
 {
@@ -10,8 +11,8 @@ namespace Clinica.Dominio.Entidades
         [Column("evolucion_clinica_id")]
         public int EvolucionClinicaID { get; set; }
 
-        [Column("texto_libre")]
-        public string TextoLibre { get; set; }
+        [Column("informe")]
+        public string Informe { get; set; }
 
         [Column("fecha_creacion")]
         public DateTime FechaDeCreacion { get; set; }
@@ -19,14 +20,34 @@ namespace Clinica.Dominio.Entidades
         [ForeignKey("Diagnostico")]
         [Column("diagnostico_id")]
         public int DiagnosticoID { get; set; }
+        
+        [ForeignKey("PedidoLaboratorio")]
+        [Column("pedido_laboratorio_id")]
+        public int PedidoLaboratorioID { get; set; }
 
+        [ForeignKey("RecetaDigital")]
+        [Column("receta_digital_id")]
+        public int RecetaDigitalID { get; set; }
+        
         // Navigation properties
         public virtual Diagnostico Diagnostico { get; set; }
+        public virtual PedidoLaboratorio PedidoLaboratorio { get; set; }
+        public virtual RecetaDigital RecetaDigital { get; set; }
 
-        public EvolucionClinica(string textoLibre)
+        public EvolucionClinica(string informe)
         {
-            TextoLibre = textoLibre;
+            Informe = informe;
             FechaDeCreacion = DateTime.Now;
+        }
+
+        public void ConPedidoLaboratorio(string textoPedidoLaboratorio)
+        {
+            PedidoLaboratorio = new PedidoLaboratorio(textoPedidoLaboratorio);
+        }
+        
+        public void ConRecetaDigital(List<MedicamentoDto> nombreMedicamentos, string indicaciones)
+        {
+            RecetaDigital = new RecetaDigital(nombreMedicamentos, indicaciones);
         }
     }
 }

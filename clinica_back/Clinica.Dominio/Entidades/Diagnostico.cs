@@ -44,9 +44,22 @@ namespace Clinica.Dominio.Entidades
 
         public void agregarEvolucion(EvolucionDto evolucionDto)
         {
-            EvolucionClinica evolucion = new EvolucionClinica(
-                evolucionDto.TextoLibre
-            );
+            EvolucionClinica evolucion = new EvolucionClinica(evolucionDto.Informe);
+            
+            // Con Pedido de Laboratorio.
+            if (!string.IsNullOrEmpty(evolucionDto.TextoPedido))
+            {
+                evolucion.ConPedidoLaboratorio(evolucionDto.TextoPedido);
+            }
+            
+            // Con Receta Digital.
+            if (evolucionDto.Medicamentos != null && 
+                evolucionDto.Medicamentos.Count > 0 && 
+                !string.IsNullOrEmpty(evolucionDto.Indicaciones))
+            {
+                evolucion.ConRecetaDigital(evolucionDto.Medicamentos, evolucionDto.Indicaciones);
+            }
+            
             EvolucionesClinicas.Add(evolucion);
         }
     }

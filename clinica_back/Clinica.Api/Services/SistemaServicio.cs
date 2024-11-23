@@ -98,7 +98,7 @@ namespace Clinica.Api.Services
                         observaciones = diagnostico.Observaciones,
                         evoluciones = diagnostico.EvolucionesClinicas.Select(evolucion => new
                         {
-                            TextoLibre = evolucion.TextoLibre,
+                            TextoLibre = evolucion.Informe,
                             FechaCreacion = evolucion.FechaDeCreacion
                         }).ToList()
                     }).ToList();

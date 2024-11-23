@@ -22,5 +22,11 @@ namespace Clinica.Dominio.Entidades
 
         // Navigation properties
         public virtual EvolucionClinica EvolucionClinica { get; set; }
+
+        public PedidoLaboratorio(string textoLibre)
+        {
+            TextoLibre = textoLibre;
+            FechaDeCreacion = DateTime.Now;
+        }
     }
 }
