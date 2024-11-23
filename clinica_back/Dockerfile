@@ -14,6 +14,7 @@ COPY /Clinica.Api/*.csproj ./Clinica.Api
 COPY /Clinica.Dominio/*.csproj ./Clinica.Dominio
 COPY /Clinica.Infraestructura.Datos/*.csproj ./Clinica.Infraestructura.Datos
 COPY /Clinica.Infraestructura.Transversal/*.csproj ./Clinica.Infraestructura.Transversal
+COPY /Clinica.Tests.UnitTests/*.csproj ./Clinica.Tests.UnitTests
 
 RUN dotnet restore ./Clinica.Api/Clinica.Api.csproj
 
@@ -22,6 +23,8 @@ COPY /Clinica.Api/. ./Clinica.Api
 COPY /Clinica.Dominio/. ./Clinica.Dominio
 COPY /Clinica.Infraestructura.Datos/. ./Clinica.Infraestructura.Datos
 COPY /Clinica.Infraestructura.Transversal/. ./Clinica.Infraestructura.Transversal
+RUN rm -rf /app/Clinica.Tests.UnitTests
+COPY Clinica.Tests.UnitTests/. ./Clinica.Tests.UnitTests
 
 WORKDIR /app/Clinica.Api
 # Build the application
