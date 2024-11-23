@@ -8,7 +8,7 @@ import 'package:clinica_front/services/dialog_service/dialog_service.dart';
 import 'package:clinica_front/services/http_service_imp.dart';
 import 'package:http/http.dart' as http;
 
-sealed class PacientesRemoteDatasource {
+abstract class PacientesRemoteDatasource {
   Future<List<Paciente>> getPaciente();
   Future<http.Response> savePaciente(PacienteRequest body);
 }
@@ -16,7 +16,7 @@ sealed class PacientesRemoteDatasource {
 class PacientesRemoteDatasourceImp extends PacientesRemoteDatasource {
   final HttpServiceImp _client = HttpServiceImp();
   final _dialogServices = locator<DialogService>();
-  String uri = '/api/Paciente';
+  String uri = '/pacientes';
   
   @override
   Future<List<Paciente>> getPaciente() async {
@@ -26,7 +26,7 @@ class PacientesRemoteDatasourceImp extends PacientesRemoteDatasource {
       List<Paciente> pacientes = jsonPaciente.map((e) => Paciente.fromMap(e)).toList();
       return pacientes; 
     } catch (e) {
-      await _dialogServices.showConfirmationDialog(title: 'Error', description: e.toString(), positiveLabel: 'Aceptar', negativeLabel: '');
+      await _dialogServices.showConfirmationDialog(title: 'Error', description: 'Error al cargar lista de pacientes', positiveLabel: 'Aceptar', negativeLabel: '');
       return [];
     }
   }

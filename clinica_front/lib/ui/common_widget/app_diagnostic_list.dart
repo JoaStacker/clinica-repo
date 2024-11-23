@@ -1,7 +1,9 @@
 import 'package:clinica_front/core/colors.dart';
 import 'package:clinica_front/core/text.dart';
+import 'package:clinica_front/data/model/historial_Paciente.dart';
 import 'package:clinica_front/ui/pages/detail_patient/detail_patient_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DiagnosticList extends StatelessWidget {
   const DiagnosticList({super.key, required this.width, required this.viewModel});
@@ -11,38 +13,51 @@ class DiagnosticList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: ElevatedButton(
-                style: buttonStyle(context),
-                onPressed: () => viewModel.navigationReplace(path: '/patient/${viewModel.patient.pacienteId}/evolution'),
-                child: Text('NUEVA EVOLUCIÓN', style: bottonStyle)),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              shrinkWrap: true,
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * width,
-              ),
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: _DiagnosticCard(
-                    tipoDeEvolucion: 'Receta Digital',
-                    diagnostico: 'Diabetes',
-                    observaciones: 'Descripción de receta digital',
-                    fecha: '10/10/2024',
-                    hora: '14:30 hs',
+      child: FutureBuilder<HistorialPaciente>(
+        future: viewModel.getHistoriaClinica(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.data?.historiaClinica.isEmpty ?? true) {
+            return Center(
+              child: Image.asset('resources/images/diagnosticos_empty.png', scale: 0.7),
+            );
+          } else {
+            return Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: ElevatedButton(
+                      style: buttonStyle(context),
+                      onPressed: () => viewModel.navigationReplace(path: '/patient/${viewModel.patient.pacienteId}/evolution'),
+                      child: Text('NUEVA EVOLUCIÓN', style: bottonStyle)),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: viewModel.historialPaciente.historiaClinica.length,
+                    shrinkWrap: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * width,
+                    ),
+                    itemBuilder: (context, index) {
+                      final historiaClinica = viewModel.historialPaciente.historiaClinica[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(2),
+                        child: _DiagnosticCard(
+                            evoluciones: historiaClinica.evoluciones,
+                            diagnostico: historiaClinica.enfermedad,
+                            observaciones: historiaClinica.observaciones),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
@@ -54,18 +69,11 @@ class DiagnosticList extends StatelessWidget {
 }
 
 class _DiagnosticCard extends StatelessWidget {
-  const _DiagnosticCard(
-      {required this.diagnostico,
-      required this.tipoDeEvolucion,
-      required this.observaciones,
-      required this.fecha,
-      required this.hora});
+  const _DiagnosticCard({required this.diagnostico, required this.evoluciones, required this.observaciones});
 
   final String diagnostico;
-  final String tipoDeEvolucion;
+  final List<Evoluciones> evoluciones;
   final String observaciones;
-  final String fecha;
-  final String hora;
 
   @override
   Widget build(BuildContext context) {
@@ -78,21 +86,9 @@ class _DiagnosticCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(diagnostico, style: textGreenStyle24),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [Text(fecha, style: textBlackStyle14), Text(hora, style: textBlackStyle14)],
-                )
-              ],
-            ),
+            Text(diagnostico, style: textGreenStyle24),
             SizedBox(height: 16),
-            Text(
-              tipoDeEvolucion, //TODO:: PONER TIPO DE EVOLUCION
-              style: textBlackStyle24,
-            ),
+            evolutionList(),
             SizedBox(height: 8),
             Text(
               observaciones,
@@ -104,6 +100,39 @@ class _DiagnosticCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Wrap evolutionList() {
+    return Wrap(
+            spacing: 8.0, // Space between items
+            runSpacing: 4.0, // Space between lines
+            children: List.generate(evoluciones.length, (index) {
+              final evolucion = evoluciones[index];
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Evolución N°: ${index + 1}', //TODO:: PONER TIPO DE EVOLUCION
+                        style: textBlackStyle24,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(DateFormat.yMd().format(evolucion.fechaCreacion), style: textBlackStyle14),
+                          Text('${DateFormat.Hm().format(evolucion.fechaCreacion)} hs', style: textBlackStyle14)
+                        ],
+                      )
+                    ],
+                  ),
+                  Text('Médico: ${evolucion.medico}', style: textBlackStyle14),
+                  Text('Informe: ${evolucion.informe}', style: textBlackStyle14),
+                ],
+              );
+            }),
+          );
   }
 
 /*   Row _actionButtons() {
