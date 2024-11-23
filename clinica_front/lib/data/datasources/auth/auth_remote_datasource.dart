@@ -4,7 +4,7 @@ import 'package:clinica_front/data/model/credential.dart';
 import 'package:clinica_front/data/model/user_model.dart';
 import 'package:clinica_front/services/http_service_imp.dart';
 
-sealed class AuthRemoteDatasource {
+abstract class AuthRemoteDatasource {
   Future<UserModel> authLogin(Credential body);
 }
 

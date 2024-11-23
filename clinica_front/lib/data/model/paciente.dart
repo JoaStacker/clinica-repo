@@ -10,7 +10,6 @@ class Paciente {
     int personaId;
     int historiaClinicaId;
     Persona persona;
-    //HistoriaClinica historiaClinica;
 
     Paciente({
         required this.pacienteId,
@@ -21,7 +20,6 @@ class Paciente {
         required this.personaId,
         required this.historiaClinicaId,
         required this.persona,
-        //required this.historiaClinica,
     });
 
 
@@ -35,7 +33,6 @@ class Paciente {
       'personaId': personaId,
       'historiaClinicaID': historiaClinicaId,
       'persona': persona.toMap(),
-      //'historiaClinica': historiaClinica.toMap(),
     };
   }
 
@@ -49,46 +46,12 @@ class Paciente {
       personaId: map['personaID'] as int,
       historiaClinicaId: map['historiaClinicaID'] as int,
       persona: Persona.fromMap(map['persona'] as Map<String,dynamic>),
-      //historiaClinica: HistoriaClinica.fromMap(map['historiaClinica'] as Map<String,dynamic>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory Paciente.fromJson(String source) => Paciente.fromMap(json.decode(source) as Map<String, dynamic>);
-}
-
-class HistoriaClinica {
-    int historiaClinicaId;
-    String fechaDeCreacion;
-    List<dynamic> diagnosticos;
-
-    HistoriaClinica({
-        required this.historiaClinicaId,
-        required this.fechaDeCreacion,
-        required this.diagnosticos,
-    });
-
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'historiaClinicaID': historiaClinicaId,
-      'fechaDeCreacion': fechaDeCreacion,
-      'diagnosticos': diagnosticos,
-    };
-  }
-
-  factory HistoriaClinica.fromMap(Map<String, dynamic> map) {
-    return HistoriaClinica(
-      historiaClinicaId: map['historiaClinicaID'] as int,
-      fechaDeCreacion: map['fechaDeCreacion'],
-      diagnosticos: List<dynamic>.from((map['diagnosticos'] as List<dynamic>),
-    ));
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory HistoriaClinica.fromJson(String source) => HistoriaClinica.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class Persona {
