@@ -2,20 +2,22 @@ using FluentAssertions;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Dtos;
 
-namespace Clinica.Api.Tests
+namespace Clinica.Api.Tests.Entities
 {
     // Clase de prueba para Diagnostico
     public class DiagnosticoTest
     {
+        private readonly Medico medico = new Medico();
+        
         [Fact]
         public void TestDiagnosticoAgregarEvolucion()
         {
-            // Preparaci�n (Arrange)
+            // Preparacion (Arrange)
             var diagnostico = new Diagnostico("Angina", "Ronchas en el cuerpo");
             var evolucionDto = new EvolucionDto { Informe = "Se receta Paracetamol." };
 
             // Ejecutar (Act)
-            diagnostico.agregarEvolucion(evolucionDto);
+            diagnostico.agregarEvolucion(evolucionDto, medico);
 
             // Verificar (Assert)
             diagnostico.EvolucionesClinicas.Should().HaveCount(1);
@@ -25,14 +27,14 @@ namespace Clinica.Api.Tests
         [Fact]
         public void TestDiagnosticoAgregarVariasEvoluciones()
         {
-            // Preparaci�n (Arrange)
+            // Preparacion (Arrange)
             var diagnostico = new Diagnostico("Varicela", "Ronchas en el cuerpo");
             var evolucionDto1 = new EvolucionDto { Informe = "Se receta Paracetamol." };
             var evolucionDto2 = new EvolucionDto { Informe = "Se receta Ibuprofeno." };
 
             // Ejecutar (Act)
-            diagnostico.agregarEvolucion(evolucionDto1);
-            diagnostico.agregarEvolucion(evolucionDto2);
+            diagnostico.agregarEvolucion(evolucionDto1, medico);
+            diagnostico.agregarEvolucion(evolucionDto2, medico);
 
             // Verificar (Assert)
             diagnostico.EvolucionesClinicas.Should().HaveCount(2);

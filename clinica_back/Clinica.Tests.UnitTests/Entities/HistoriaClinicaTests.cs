@@ -2,10 +2,12 @@
 using Clinica.Dominio.Entidades;
 using FluentAssertions;
 
-namespace Clinica.Api.Tests
+namespace Clinica.Api.Tests.Entities
 {
     public class HistoriaClinicaTests
     {
+        private readonly Medico medico = new Medico();
+
         [Fact]
         public void TestAgregarDiagnostico()
         {
@@ -44,7 +46,7 @@ namespace Clinica.Api.Tests
             };
 
             // Ejecutar (Act)
-            historiaClinica.agregarEvolucion(evolucionDto);
+            historiaClinica.agregarEvolucion(evolucionDto, medico);
 
             // Verificar (Assert)
             var diagnostico = historiaClinica.Diagnosticos.First();

@@ -22,13 +22,13 @@ namespace Clinica.Dominio.Entidades
 
         public HistoriaClinica() { }
 
-        public void agregarEvolucion(EvolucionDto evolucionDto)
+        public void agregarEvolucion(EvolucionDto evolucionDto, Medico medico)
         {
             var diagnostico = Diagnosticos.FirstOrDefault(d => d.DiagnosticoID == evolucionDto.DiagnosticoId);
 
             if (diagnostico != null)
             {
-                diagnostico.agregarEvolucion(evolucionDto);
+                diagnostico.agregarEvolucion(evolucionDto, medico);
             }
             else
             {

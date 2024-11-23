@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clinica.Infraestructura.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clinica.Infraestructura.Transversal", "..\Clinica.Infraestructura.Transversal\Clinica.Infraestructura.Transversal.csproj", "{64E00040-4F5C-4F7D-B9B4-2D9450E5060E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Api.Tests", "..\Clinica.Api.Tests\Clinica.Api.Tests.csproj", "{D981EF79-1F30-49C0-8E6E-F7C99B1C7613}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Tests.UnitTests", "..\Clinica.Tests.UnitTests\Clinica.Tests.UnitTests.csproj", "{D981EF79-1F30-49C0-8E6E-F7C99B1C7613}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.Clinica.Tests", "04.Clinica.Tests", "{F88B7623-2C51-48E3-8F5F-8CEB7D31E84B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,7 +56,7 @@ Global
 		{B49032E6-733D-4E98-9718-5DD475A83886} = {59C1257A-D0D3-4419-81FF-B42BDAAA94C1}
 		{4D20B2E5-99C9-4A2D-89E4-A121F545A45A} = {757B1BC3-3A9B-42AD-B844-A37ECC9A7A24}
 		{64E00040-4F5C-4F7D-B9B4-2D9450E5060E} = {757B1BC3-3A9B-42AD-B844-A37ECC9A7A24}
-		{D981EF79-1F30-49C0-8E6E-F7C99B1C7613} = {3D17DFA3-76EE-476A-AC35-E8008D595A94}
+		{D981EF79-1F30-49C0-8E6E-F7C99B1C7613} = {F88B7623-2C51-48E3-8F5F-8CEB7D31E84B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FD84735-29E7-4F66-8A16-844DFDADCD1E}

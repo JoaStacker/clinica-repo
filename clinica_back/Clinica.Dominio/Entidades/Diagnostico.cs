@@ -42,9 +42,9 @@ namespace Clinica.Dominio.Entidades
             FechaDeCreacion = DateTime.Now;
         }
 
-        public void agregarEvolucion(EvolucionDto evolucionDto)
+        public void agregarEvolucion(EvolucionDto evolucionDto, Medico medico)
         {
-            EvolucionClinica evolucion = new EvolucionClinica(evolucionDto.Informe);
+            EvolucionClinica evolucion = new EvolucionClinica(evolucionDto.Informe, medico);
             
             // Con Pedido de Laboratorio.
             if (!string.IsNullOrEmpty(evolucionDto.TextoPedido))

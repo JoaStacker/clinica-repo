@@ -60,7 +60,7 @@ namespace Clinica.Api.Controllers
         }
 
         [HttpGet]
-        [Route("/{id}/historia-clinica")]
+        [Route("/historia-clinica")]
         public async Task<IActionResult> ObtenerHistoriaClinicaConEvoluciones(int idPaciente)
         {
             ServiceResponse sr = await _servicio.ObtenerHistoriaClinicaConEvoluciones(idPaciente);
@@ -72,12 +72,12 @@ namespace Clinica.Api.Controllers
             else
             {
                 return StatusCode(sr.StatusCode,
-                    new { message = "Error al crear el paciente.", error = sr.Message });
+                    new { message = "Error al obtener historia clinica.", error = sr.Message });
             }
         }
 
         [HttpPost]
-        [Route("/{id}/evoluciones")]
+        [Route("/evoluciones")]
         public async Task<IActionResult> agregarEvolucion(int idPaciente, [FromBody] EvolucionDto evolucionDto)
         {
             ServiceResponse sr = await _servicio.crearEvolucion(idPaciente, evolucionDto);
@@ -107,7 +107,7 @@ namespace Clinica.Api.Controllers
             else
             {
                 return StatusCode(sr.StatusCode,
-                    new { message = "Error al crear el paciente.", error = sr.Message });
+                    new { message = "Error al agregar diagnostico a historia clinica.", error = sr.Message });
             }
         }
 
@@ -124,7 +124,7 @@ namespace Clinica.Api.Controllers
             else
             {
                 return StatusCode(sr.StatusCode,
-                    new { message = "Error al crear el paciente.", error = sr.Message });
+                    new { message = "Error al listar diagnosticos previos.", error = sr.Message });
             }
         }
     }

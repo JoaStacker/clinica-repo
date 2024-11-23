@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Contratos;
+using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Dtos;
 using Clinica.Infraestructura.Datos;
 
@@ -6,11 +7,13 @@ namespace Clinica.Api.Services
 {
     public class SistemaServicio: ISistemaServicio
     {
-        Repositorio<Paciente> _repositorioPaciente;
+        IRepositorio<Paciente> _repositorioPaciente;
+        IRepositorio<Medico> _repositorioMedico;
 
         public SistemaServicio(ClinicaContext context)
         {
             _repositorioPaciente = new Repositorio<Paciente>(context);
+            _repositorioMedico = new Repositorio<Medico>(context);
         }
         public async Task<ServiceResponse> listarPacientes()
         {
@@ -79,7 +82,7 @@ namespace Clinica.Api.Services
             {
                 Paciente paciente = _repositorioPaciente.Get(idPaciente);
 
-                if (paciente == null)
+                if (paciente == null) 
                 {
                     return new ServiceResponse(
                         ServiceStatus.ERROR,
@@ -98,8 +101,11 @@ namespace Clinica.Api.Services
                         observaciones = diagnostico.Observaciones,
                         evoluciones = diagnostico.EvolucionesClinicas.Select(evolucion => new
                         {
-                            TextoLibre = evolucion.Informe,
-                            FechaCreacion = evolucion.FechaDeCreacion
+                            Medico = evolucion.Medico.Persona.NombreApellido + " [" + evolucion.Medico.Matricula + "]",
+                            Informe = evolucion.Informe,
+                            FechaCreacion = evolucion.FechaDeCreacion,
+                            TextoPedido = evolucion.PedidoLaboratorio?.TextoLibre,
+                            IndicacionesReceta = evolucion.RecetaDigital?.Indicaciones,
                         }).ToList()
                     }).ToList();
 
@@ -108,7 +114,7 @@ namespace Clinica.Api.Services
                     pacienteID = paciente.PacienteID,
                     dni = paciente.Persona.Dni,
                     nombreApellido = paciente.Persona.NombreApellido,
-                    historiaClinica=historiaClinicaCompleta
+                    historiaClinica = historiaClinicaCompleta
                 };
                 return new ServiceResponse(
                     ServiceStatus.OK,
@@ -142,8 +148,18 @@ namespace Clinica.Api.Services
                         "El paciente no existe"
                     );
                 }
-
-                paciente.agregarEvolucion(evolucionDto);
+                
+                Medico medico = _repositorioMedico.Get(evolucionDto.MedicoId);
+                if (medico == null)
+                {
+                    return new ServiceResponse(
+                        ServiceStatus.ERROR,
+                        StatusCodes.Status409Conflict,
+                        "El medico no existe"
+                    );
+                }
+                
+                paciente.agregarEvolucion(evolucionDto, medico);
 
                 _repositorioPaciente.Modificar(paciente);
                 _repositorioPaciente.ConfirmarCambios();

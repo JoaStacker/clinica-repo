@@ -17,14 +17,6 @@ namespace Clinica.Dominio.Entidades
         [Column("fecha_creacion")]
         public DateTime FechaDeCreacion { get; set; }
 
-        // [ForeignKey("EvolucionClinica")]
-        // [Column("evolucion_clinica_id")]
-        // public int EvolucionClinicaID { get; set; }
-        //
-        // // Navigation Properties
-        // [JsonIgnore]// Navigation properties
-        // public virtual EvolucionClinica EvolucionClinica { get; set; }
-        //
         public PedidoLaboratorio() { }
 
         public PedidoLaboratorio(string textoLibre)

@@ -2,6 +2,7 @@
 {
     public class EvolucionDto
     {
+        public int MedicoId { get; set; }
         public int DiagnosticoId { get; set; }
 
         // Evolucion simple.

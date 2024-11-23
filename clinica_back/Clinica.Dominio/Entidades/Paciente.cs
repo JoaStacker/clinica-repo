@@ -75,9 +75,9 @@ namespace Clinica.Dominio.Entidades
             HistoriaClinica = nuevaHistoriaClinica;
         }
 
-        public void agregarEvolucion(EvolucionDto evolucionDto)
+        public void agregarEvolucion(EvolucionDto evolucionDto, Medico medico)
         {
-            HistoriaClinica.agregarEvolucion(evolucionDto);
+            HistoriaClinica.agregarEvolucion(evolucionDto, medico);
         }
 
         public void agregarDiagnosticoAHistoriaClinica(DiagnosticoDto diagnosticoDto)

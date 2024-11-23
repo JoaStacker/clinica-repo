@@ -1,36 +1,38 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-using FluentAssertions;
+using Clinica.Dominio.Contratos;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Dtos;
+using FluentAssertions;
+using Moq;
+using Xunit;
 
-namespace Clinica.Api.Tests
+namespace Clinica.Api.Tests.Entities
 {
     // Clase de prueba para Diagnostico
     public class EvolucionClinicaTest
     {
+        private readonly Medico medico = new Medico();
+        private readonly string informeEsperado = "El paciente presenta sintomas de conjuntivitis.";
+        
         [Fact]
         public void TestEvolucionClinicaConstructor()
         {
             // Preparacion (Arrange)
-            var informeEsperado = "El paciente presenta sintomas de conjuntivitis.";
-
+            // * * *
+            
             // Ejecutar (Act)
-            EvolucionClinica nuevaEvolucion = new EvolucionClinica(informeEsperado);
+            EvolucionClinica nuevaEvolucion = new EvolucionClinica(informeEsperado, medico);
 
             // Verificar (Assert)
             nuevaEvolucion.Informe.Should().Be(informeEsperado);
+            // Assert.Equal(nuevaEvolucion.Informe, informeEsperado);
         }
 
         [Fact]
         public void TestEvolucionClinicaConPedidoLaboratorio()
         {
             // Preparacion (Arrange)
-            var informeEsperado = "El paciente presenta fiebre y tos leve.";
-            var textoPedidoLaboratorio = "Se solicita: Analisis de hemoglobina completo.";
-            EvolucionClinica evolucion = new EvolucionClinica(informeEsperado);
+            string textoPedidoLaboratorio = "Se solicita: Analisis de hemoglobina completo.";
+            EvolucionClinica evolucion = new EvolucionClinica(informeEsperado, medico);
 
             // Ejecutar (Act)
             evolucion.ConPedidoLaboratorio(textoPedidoLaboratorio);
@@ -38,19 +40,21 @@ namespace Clinica.Api.Tests
             // Verificar (Assert)
             evolucion.Informe.Should().Be(informeEsperado);
             evolucion.PedidoLaboratorio.TextoLibre.Should().Be(textoPedidoLaboratorio);
+
+            // Assert.Equal(evolucion.Informe, informeEsperado);
+            // Assert.Equal(evolucion.PedidoLaboratorio.TextoLibre, textoPedidoLaboratorio);
         }
         
         [Fact]
         public void TestEvolucionClinicaConRecetaDigital()
         {
             // Preparacion (Arrange)
-            var informeEsperado = "El paciente presenta fiebre y tos leve.";
-            var listaMedicamentos = new List<MedicamentoDto>
+            List<MedicamentoDto> listaMedicamentos = new List<MedicamentoDto>
             {
                 new MedicamentoDto("123", "Ibuprofeno 400", 2)  // MedicamentoDto con codigo, nombre y cantidad
             };
-            var indicaciones = "Tomar una capsula cada 8 horas.";
-            EvolucionClinica evolucion = new EvolucionClinica(informeEsperado);
+            string indicaciones = "Tomar una capsula cada 8 horas.";
+            EvolucionClinica evolucion = new EvolucionClinica(informeEsperado, medico);
 
             // Ejecutar (Act)
             evolucion.ConRecetaDigital(listaMedicamentos, indicaciones);
