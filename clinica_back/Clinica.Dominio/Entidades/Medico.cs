@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Clinica.Dominio.Dtos;
 
 namespace Clinica.Dominio.Entidades
@@ -25,6 +26,9 @@ namespace Clinica.Dominio.Entidades
         // Navigation properties
         public virtual Persona Persona { get; set; }
 
+        [JsonIgnore]
+        public virtual ICollection<RecetaDigital> Recetas { get; set; }
+        
         public Medico() { }
         public Medico(MedicoDto medicoDto)
         {

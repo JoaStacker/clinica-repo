@@ -32,7 +32,7 @@ namespace Clinica.Dominio.Entidades
         
         [ForeignKey("Medico")]
         [Column("medico_id")]
-        public int? MedicoID { get; set; }
+        public int MedicoID { get; set; }
         
         // Navigation properties
         [JsonIgnore]// Navigation properties
@@ -51,7 +51,8 @@ namespace Clinica.Dominio.Entidades
         {
             Informe = informe;
             FechaDeCreacion = DateTime.Now;
-            Medico = medico;
+            // Medico = medico;
+            MedicoID = medico.MedicoID;  
         }
 
         public void ConPedidoLaboratorio(string textoPedidoLaboratorio)
@@ -59,9 +60,9 @@ namespace Clinica.Dominio.Entidades
             PedidoLaboratorio = new PedidoLaboratorio(textoPedidoLaboratorio);
         }
         
-        public void ConRecetaDigital(List<MedicamentoDto> nombreMedicamentos, string indicaciones)
+        public void ConRecetaDigital(List<MedicamentoDto> medicamentos, string indicaciones)
         {
-            RecetaDigital = new RecetaDigital(nombreMedicamentos, indicaciones);
+            RecetaDigital = new RecetaDigital(medicamentos, indicaciones);
         }
     }
 }

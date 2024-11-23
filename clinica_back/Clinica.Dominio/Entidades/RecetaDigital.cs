@@ -26,21 +26,7 @@ namespace Clinica.Dominio.Entidades
         public DateTime FechaDeCreacion { get; set; }
 
         [Column("estado")] 
-        public EstadoReceta Estado { get; set; } = EstadoReceta.ACTIVO;
-
-        [ForeignKey("Medico")]
-        [Column("medico_id")]
-        public int MedicoID { get; set; }
-
-        // [ForeignKey("EvolucionClinica")]
-        // [Column("evolucion_clinica_id")]
-        // public int EvolucionClinicaID { get; set; }
-
-        // Navigation properties
-        [JsonIgnore]// Navigation properties
-        public virtual Medico Medico { get; set; }
-        // [JsonIgnore]// Navigation properties
-        // public virtual EvolucionClinica EvolucionClinica { get; set; }
+        public EstadoReceta Estado { get; set; }
         
         [JsonIgnore]
         public virtual ICollection<Medicamento> Medicamentos { get; set; } = new List<Medicamento>();
@@ -52,6 +38,8 @@ namespace Clinica.Dominio.Entidades
             CodigoBarras = "7796569161254";
             CodigoQR = "-";
             Indicaciones = indicaciones;
+            FechaDeCreacion = DateTime.Now;
+            Estado = EstadoReceta.ACTIVO;
             
             foreach (var medicamentoDto in medicamentos)
             {

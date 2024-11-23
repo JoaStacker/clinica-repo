@@ -34,9 +34,10 @@ namespace Clinica.Api.Controllers
 
             var tokens = _utilidades.generarJWT(usuarioCredentials);
 
-            var user = new UsuarioLoginDto()
+            var user = new 
             {
                 Email = usuarioCredentials.Email,
+                MedicoId = usuarioCredentials.Medico.MedicoID,
                 Token = tokens
             };
 

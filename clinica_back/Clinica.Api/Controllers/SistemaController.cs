@@ -95,7 +95,7 @@ namespace Clinica.Api.Controllers
         }
 
         [HttpPost]
-        [Route("/{id}/diagnosticos")]
+        [Route("/diagnosticos")]
         public async Task<IActionResult> agregarDiagnosticoAHistoriaClinica(int idPaciente, [FromBody] DiagnosticoDto diagnosticoDto)
         {
             ServiceResponse sr = await _servicio.agregarDiagnosticoAHistoriaClinica(idPaciente, diagnosticoDto);
@@ -112,7 +112,7 @@ namespace Clinica.Api.Controllers
         }
 
         [HttpGet]
-        [Route("/{id}/diagnosticos")]
+        [Route("/diagnosticos")]
         public async Task<IActionResult> listarDiagnosticosPrevios(int idPaciente)
         {
             ServiceResponse sr = await _servicio.buscarDiagnosticosPrevios(idPaciente);
