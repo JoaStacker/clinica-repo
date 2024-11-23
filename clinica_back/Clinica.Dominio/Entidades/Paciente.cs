@@ -41,10 +41,7 @@ namespace Clinica.Dominio.Entidades
         public virtual HistoriaClinica HistoriaClinica { get; set; }
 
         // Constructor default
-        public Paciente()
-        {
-
-        }
+        public Paciente() { }
 
         public Paciente(PacienteDto pacienteDto)
         {

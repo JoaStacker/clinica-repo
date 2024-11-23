@@ -16,5 +16,7 @@ namespace Clinica.Dominio.Entidades
 
         // Navigation properties
         public virtual Persona Persona { get; set; }
+
+        public Recepcionista() { }
     }
 }

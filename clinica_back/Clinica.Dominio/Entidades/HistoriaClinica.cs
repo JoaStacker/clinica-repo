@@ -17,12 +17,10 @@ namespace Clinica.Dominio.Entidades
         public DateTime FechaDeCreacion { get; set; }
 
         // Navigation properties
-        [JsonIgnore]
+        [JsonIgnore]  // Prevent circular reference
         public virtual ICollection<Diagnostico> Diagnosticos { get; set; } = new HashSet<Diagnostico>();
 
-        public HistoriaClinica() {
-            FechaDeCreacion = DateTime.Now;
-        }
+        public HistoriaClinica() { }
 
         public void agregarEvolucion(EvolucionDto evolucionDto)
         {

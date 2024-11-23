@@ -30,5 +30,7 @@ namespace Clinica.Dominio.Entidades
 
         [Column("departamento")]
         public string Departamento { get; set; }
+        
+        public Direccion() { }
     }
 }

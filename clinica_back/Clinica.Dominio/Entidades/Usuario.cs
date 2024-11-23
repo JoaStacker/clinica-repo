@@ -29,6 +29,7 @@ namespace Clinica.Dominio.Entidades
         public virtual Medico Medico { get; set; }
 
         public Usuario() { }
+        
         public Usuario(SignUpDto usuarioDto)
         {
             Email = usuarioDto.Email;

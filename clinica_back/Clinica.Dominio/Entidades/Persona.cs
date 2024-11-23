@@ -37,6 +37,7 @@ namespace Clinica.Dominio.Entidades
         public virtual Direccion Direccion { get; set; }
 
         public Persona() { }
+        
         public Persona(PersonaDto personaDto)
         {
             Cuil = personaDto.Cuil;

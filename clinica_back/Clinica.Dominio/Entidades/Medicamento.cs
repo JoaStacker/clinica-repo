@@ -20,6 +20,8 @@ namespace Clinica.Dominio.Entidades
         [Column("cantidad")]
         public double Cantidad { get; set; }
 
+        public Medicamento() { }
+
         public Medicamento(string codigo, string nombreComercial, double cantidad)
         {
             Codigo = codigo;

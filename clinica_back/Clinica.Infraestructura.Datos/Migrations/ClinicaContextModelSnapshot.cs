@@ -44,7 +44,7 @@ namespace Clinica.Infraestructura.Datos.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_creacion");
 
-                    b.Property<int?>("HistoriaClinicaID")
+                    b.Property<int>("HistoriaClinicaID")
                         .HasColumnType("int")
                         .HasColumnName("historia_clinica_id");
 
@@ -127,14 +127,26 @@ namespace Clinica.Infraestructura.Datos.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_creacion");
 
-                    b.Property<string>("TextoLibre")
+                    b.Property<string>("Informe")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("texto_libre");
+                        .HasColumnName("informe");
+
+                    b.Property<int?>("PedidoLaboratorioID")
+                        .HasColumnType("int")
+                        .HasColumnName("pedido_laboratorio_id");
+
+                    b.Property<int?>("RecetaDigitalID")
+                        .HasColumnType("int")
+                        .HasColumnName("receta_digital_id");
 
                     b.HasKey("EvolucionClinicaID");
 
                     b.HasIndex("DiagnosticoID");
+
+                    b.HasIndex("PedidoLaboratorioID");
+
+                    b.HasIndex("RecetaDigitalID");
 
                     b.ToTable("evoluciones_clinicas", (string)null);
                 });
@@ -165,6 +177,10 @@ namespace Clinica.Infraestructura.Datos.Migrations
                         .HasColumnName("medicamento_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MedicamentoID"));
+
+                    b.Property<double>("Cantidad")
+                        .HasColumnType("float")
+                        .HasColumnName("cantidad");
 
                     b.Property<string>("Codigo")
                         .IsRequired()
@@ -269,10 +285,6 @@ namespace Clinica.Infraestructura.Datos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PedidoLaboratorioID"));
 
-                    b.Property<int>("EvolucionClinicaID")
-                        .HasColumnType("int")
-                        .HasColumnName("evolucion_clinica_id");
-
                     b.Property<DateTime>("FechaDeCreacion")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_creacion");
@@ -283,8 +295,6 @@ namespace Clinica.Infraestructura.Datos.Migrations
                         .HasColumnName("texto_libre");
 
                     b.HasKey("PedidoLaboratorioID");
-
-                    b.HasIndex("EvolucionClinicaID");
 
                     b.ToTable("pedidos_laboratorio", (string)null);
                 });
@@ -367,8 +377,9 @@ namespace Clinica.Infraestructura.Datos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecetaDigitalID"));
 
-                    b.Property<int>("CodigoBarras")
-                        .HasColumnType("int")
+                    b.Property<string>("CodigoBarras")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("codigo_barras");
 
                     b.Property<string>("CodigoQR")
@@ -376,30 +387,24 @@ namespace Clinica.Infraestructura.Datos.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("codigo_qr");
 
-                    b.Property<string>("Dosis")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("dosis");
-
                     b.Property<int>("Estado")
                         .HasColumnType("int")
                         .HasColumnName("estado");
 
-                    b.Property<int>("EvolucionClinicaID")
-                        .HasColumnType("int")
-                        .HasColumnName("evolucion_clinica_id");
-
                     b.Property<DateTime>("FechaDeCreacion")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_creacion");
+
+                    b.Property<string>("Indicaciones")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("dosis");
 
                     b.Property<int>("MedicoID")
                         .HasColumnType("int")
                         .HasColumnName("medico_id");
 
                     b.HasKey("RecetaDigitalID");
-
-                    b.HasIndex("EvolucionClinicaID");
 
                     b.HasIndex("MedicoID");
 
@@ -439,7 +444,9 @@ namespace Clinica.Infraestructura.Datos.Migrations
                 {
                     b.HasOne("Clinica.Dominio.Entidades.HistoriaClinica", "HistoriaClinica")
                         .WithMany("Diagnosticos")
-                        .HasForeignKey("HistoriaClinicaID");
+                        .HasForeignKey("HistoriaClinicaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("HistoriaClinica");
                 });
@@ -452,7 +459,19 @@ namespace Clinica.Infraestructura.Datos.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Clinica.Dominio.Entidades.PedidoLaboratorio", "PedidoLaboratorio")
+                        .WithMany()
+                        .HasForeignKey("PedidoLaboratorioID");
+
+                    b.HasOne("Clinica.Dominio.Entidades.RecetaDigital", "RecetaDigital")
+                        .WithMany()
+                        .HasForeignKey("RecetaDigitalID");
+
                     b.Navigation("Diagnostico");
+
+                    b.Navigation("PedidoLaboratorio");
+
+                    b.Navigation("RecetaDigital");
                 });
 
             modelBuilder.Entity("Clinica.Dominio.Entidades.Medicamento", b =>
@@ -490,17 +509,6 @@ namespace Clinica.Infraestructura.Datos.Migrations
                     b.Navigation("Persona");
                 });
 
-            modelBuilder.Entity("Clinica.Dominio.Entidades.PedidoLaboratorio", b =>
-                {
-                    b.HasOne("Clinica.Dominio.Entidades.EvolucionClinica", "EvolucionClinica")
-                        .WithMany()
-                        .HasForeignKey("EvolucionClinicaID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("EvolucionClinica");
-                });
-
             modelBuilder.Entity("Clinica.Dominio.Entidades.Persona", b =>
                 {
                     b.HasOne("Clinica.Dominio.Entidades.Direccion", "Direccion")
@@ -525,19 +533,11 @@ namespace Clinica.Infraestructura.Datos.Migrations
 
             modelBuilder.Entity("Clinica.Dominio.Entidades.RecetaDigital", b =>
                 {
-                    b.HasOne("Clinica.Dominio.Entidades.EvolucionClinica", "EvolucionClinica")
-                        .WithMany()
-                        .HasForeignKey("EvolucionClinicaID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Clinica.Dominio.Entidades.Medico", "Medico")
                         .WithMany()
                         .HasForeignKey("MedicoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("EvolucionClinica");
 
                     b.Navigation("Medico");
                 });

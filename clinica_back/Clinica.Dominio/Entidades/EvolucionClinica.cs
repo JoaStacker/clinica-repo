@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Clinica.Dominio.Dtos;
 
 namespace Clinica.Dominio.Entidades
@@ -23,17 +24,22 @@ namespace Clinica.Dominio.Entidades
         
         [ForeignKey("PedidoLaboratorio")]
         [Column("pedido_laboratorio_id")]
-        public int PedidoLaboratorioID { get; set; }
+        public int? PedidoLaboratorioID { get; set; }
 
         [ForeignKey("RecetaDigital")]
         [Column("receta_digital_id")]
-        public int RecetaDigitalID { get; set; }
+        public int? RecetaDigitalID { get; set; }
         
         // Navigation properties
+        [JsonIgnore]// Navigation properties
         public virtual Diagnostico Diagnostico { get; set; }
+        [JsonIgnore]// Navigation properties
         public virtual PedidoLaboratorio PedidoLaboratorio { get; set; }
+        [JsonIgnore]// Navigation properties
         public virtual RecetaDigital RecetaDigital { get; set; }
 
+        public EvolucionClinica() { }
+        
         public EvolucionClinica(string informe)
         {
             Informe = informe;
