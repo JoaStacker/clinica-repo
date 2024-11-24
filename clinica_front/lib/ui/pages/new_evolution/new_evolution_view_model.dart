@@ -1,10 +1,14 @@
+import 'package:clinica_front/data/datasources/diagnosticos/diagnosticos_remote_datasource.dart';
+import 'package:clinica_front/data/model/diagnostico.dart';
 import 'package:clinica_front/data/model/paciente.dart';
 import 'package:clinica_front/data/repository/pacientes/pacientes_repository_imp.dart';
 import 'package:clinica_front/mixins/navegation_services.dart';
 import 'package:flutter/material.dart';
 
 class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
-  final pacientesRepositoryImp = PacientesRepositoryImp();
+  final _pacientesRepositoryImp = PacientesRepositoryImp();
+  final _diagnosticosRepositoryImp = DiagnosticosRemoteDatasourceImp();
+
   final TextEditingController _obsEvol = TextEditingController();
   TextEditingController get obsEvol => _obsEvol;
   final TextEditingController _obsDelivery = TextEditingController();
@@ -26,10 +30,15 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
 
 
   Future<Paciente> getPatient(String patientId) async {
-    final patientList = await pacientesRepositoryImp.getPaciente();
+    final patientList = await _pacientesRepositoryImp.getPaciente();
     final patient = patientList.singleWhere((e) => e.pacienteId.toString() == patientId);
     _patient = patient;
     return patient;
+  }
+
+
+  Future<List<Diagnostico>> getDiagnosticoPrevio() async {
+    return await _diagnosticosRepositoryImp.getDiagnosticoPrevio(_patient.pacienteId);
   }
 
   void changeDigitalRecipe(){
@@ -50,6 +59,16 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
   void addNewDiagnostic(){
     _addDiagnostic = !_addDiagnostic;
     notifyListeners();
+  }
+
+
+  @override
+  void dispose() {
+    _diagnosticController.dispose();
+    _obsEvol.dispose();
+    _obsRecipe.dispose();
+    _obsDelivery.dispose();
+    super.dispose();
   }
 
 }
