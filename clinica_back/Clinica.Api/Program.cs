@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Clinica.Api.Utils;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 // Load environment variables from .env file
 Env.Load();
@@ -59,7 +58,7 @@ builder.Services.AddDbContext<ClinicaContext>(opt => {
     opt.UseLazyLoadingProxies();
 });
 
-builder.Services.AddSingleton<Utils>();
+builder.Services.AddSingleton<ISesionUtils>();
 
 builder.Services.AddAuthentication(config =>{
     config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

@@ -4,17 +4,18 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Clinica.Dominio.Entidades;
+
 namespace Clinica.Api.Utils
 {
-    public class Utils
+    public class SesionUtils: ISesionUtils
     {
         private readonly IConfiguration _configuration;
         //Para acceder en el archivo appsetting
-        public Utils(IConfiguration configuration)
+        public SesionUtils(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        public string encriptarSHA256(string texto)
+        public string EncriptarSHA256(string texto)
         {
             using (SHA256 sha256Hash = SHA256.Create())
             {
@@ -30,7 +31,7 @@ namespace Clinica.Api.Utils
             }            
 
         }
-        public string generarJWT(Usuario modelo)
+        public string GenerarJWT(Usuario modelo)
         {
             //crear la informacion del usuario para token
             var userClaims = new[]

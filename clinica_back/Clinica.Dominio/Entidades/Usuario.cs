@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Clinica.Dominio.Entidades
@@ -27,6 +28,10 @@ namespace Clinica.Dominio.Entidades
 
         // Propiedad de navegación
         public virtual Medico Medico { get; set; }
+
+        // Navigation properties
+        [JsonIgnore]  // Prevent circular reference
+        public virtual ICollection<Sesion> Sesiones { get; set; } = new HashSet<Sesion>();
 
         public Usuario() { }
         
@@ -56,6 +61,17 @@ namespace Clinica.Dominio.Entidades
             Medico nuevoMedico = new Medico(medicoDto);
 
             Medico = nuevoMedico;
+        }
+
+        public Sesion IniciarSesion(string token)
+        {
+            Sesion sesion = new Sesion(token)
+            {
+                UsuarioID = this.Id,  
+                Usuario = this        
+            };
+            Sesiones.Add(sesion);
+            return sesion;
         }
     }
 
