@@ -13,28 +13,28 @@ class DiagnosticList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: FutureBuilder<HistorialPaciente>(
-        future: viewModel.getHistoriaClinica(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.data?.historiaClinica.isEmpty ?? true) {
-            return Center(
-              child: Image.asset('resources/images/diagnosticos_empty.png', scale: 0.7),
-            );
-          } else {
-            return Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: ElevatedButton(
-                      style: buttonStyle(context),
-                      onPressed: () => viewModel.navigationReplace(path: '/patient/${viewModel.patient.pacienteId}/evolution'),
-                      child: Text('NUEVA EVOLUCIÓN', style: bottonStyle)),
-                ),
-                Expanded(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: ElevatedButton(
+                style: buttonStyle(context),
+                onPressed: () => viewModel.navigationReplace(path: '/patient/${viewModel.patient.pacienteId}/evolution'),
+                child: Text('NUEVA EVOLUCIÓN', style: bottonStyle)),
+          ),
+          FutureBuilder<HistorialPaciente>(
+            future: viewModel.getHistoriaClinica(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (snapshot.data?.historiaClinica.isEmpty ?? true) {
+                return Center(
+                  child: Image.asset('resources/images/diagnosticos_empty.png', scale: 0.7),
+                );
+              } else {
+                return Expanded(
                   child: ListView.builder(
                     itemCount: viewModel.historialPaciente.historiaClinica.length,
                     shrinkWrap: true,
@@ -53,11 +53,11 @@ class DiagnosticList extends StatelessWidget {
                       );
                     },
                   ),
-                ),
-              ],
-            );
-          }
-        },
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -104,35 +104,35 @@ class _DiagnosticCard extends StatelessWidget {
 
   Wrap evolutionList() {
     return Wrap(
-            spacing: 8.0, // Space between items
-            runSpacing: 4.0, // Space between lines
-            children: List.generate(evoluciones.length, (index) {
-              final evolucion = evoluciones[index];
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Evolución N°: ${index + 1}', //TODO:: PONER TIPO DE EVOLUCION
-                        style: textBlackStyle24,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(DateFormat.yMd().format(evolucion.fechaCreacion), style: textBlackStyle14),
-                          Text('${DateFormat.Hm().format(evolucion.fechaCreacion)} hs', style: textBlackStyle14)
-                        ],
-                      )
-                    ],
-                  ),
-                  Text('Médico: ${evolucion.medico}', style: textBlackStyle14),
-                  Text('Informe: ${evolucion.informe}', style: textBlackStyle14),
-                ],
-              );
-            }),
-          );
+      spacing: 8.0, // Space between items
+      runSpacing: 4.0, // Space between lines
+      children: List.generate(evoluciones.length, (index) {
+        final evolucion = evoluciones[index];
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Evolución N°: ${index + 1}', //TODO:: PONER TIPO DE EVOLUCION
+                  style: textBlackStyle24,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(DateFormat.yMd().format(evolucion.fechaCreacion), style: textBlackStyle14),
+                    Text('${DateFormat.Hm().format(evolucion.fechaCreacion)} hs', style: textBlackStyle14)
+                  ],
+                )
+              ],
+            ),
+            Text('Médico: ${evolucion.medico}', style: textBlackStyle14),
+            Text('Informe: ${evolucion.informe}', style: textBlackStyle14),
+          ],
+        );
+      }),
+    );
   }
 
 /*   Row _actionButtons() {

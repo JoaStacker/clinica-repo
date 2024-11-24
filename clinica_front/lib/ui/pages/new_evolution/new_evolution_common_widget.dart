@@ -1,5 +1,6 @@
 import 'package:clinica_front/core/colors.dart';
 import 'package:clinica_front/core/text.dart';
+import 'package:clinica_front/data/model/diagnostico.dart';
 import 'package:clinica_front/data/model/paciente.dart';
 import 'package:clinica_front/enum/enum_diagnostics.dart';
 import 'package:clinica_front/ui/common_widget/app_medication_list.dart';
@@ -18,61 +19,64 @@ class NewEvolutionCommonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        body: Consumer<NewEvolutionViewModel>(builder: (BuildContext context, NewEvolutionViewModel vm, Widget? child) {
-          return FutureBuilder<Paciente>(
-            future: vm.getPatient(patientId), // Fetch patient data
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(heightFactor: 20, child: CircularProgressIndicator()); // Loading indicator
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}')); // Error handling
-              } else if (snapshot.hasData) {
-                var height = MediaQuery.of(context).size.height;
-                return Container(
-                  height: height,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('resources/images/patient_tile_background_screen.png'), fit: BoxFit.cover, scale: 4),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                            height: height * 0.2,
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2), // Shadow color
-                                  spreadRadius: 2, // Spread radius
-                                  blurRadius: 5, // Blur radius
-                                  offset: Offset(0, 3), // Offset for the shadow
-                                ),
-                              ],
-                              color: kWhitePure,
-                            ),
-                            child: _backButtonAndName(vm, context)),
-                        _bodyEvolution(vm, context),
-                        Visibility(
-                          visible: vm.diagnosticString.isNotEmpty,
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: ElevatedButton(
-                                style: buttonStyle(context),
-                                onPressed: () {},
-                                child: Text('REGISTRAR EVOLUCIÓN', style: bottonStyle)),
-                          ),
-                        ),
-                      ],
+        body: Builder(
+          builder: (BuildContext context) {
+            final vm = Provider.of<NewEvolutionViewModel>(context); // Accessing the ViewModel directly
+            return FutureBuilder<Paciente>(
+              future: vm.getPatient(patientId), // Fetch patient data
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(heightFactor: 20, child: CircularProgressIndicator()); // Loading indicator
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}')); // Error handling
+                } else if (snapshot.hasData) {
+                  var height = MediaQuery.of(context).size.height;
+                  return Container(
+                    height: height,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('resources/images/patient_tile_background_screen.png'), fit: BoxFit.cover, scale: 4),
                     ),
-                  ),
-                );
-              }
-              return SizedBox(); // Fallback if no data
-            },
-          );
-        }));
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                              height: height * 0.2,
+                              width: double.maxFinite,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2), // Shadow color
+                                    spreadRadius: 2, // Spread radius
+                                    blurRadius: 5, // Blur radius
+                                    offset: Offset(0, 3), // Offset for the shadow
+                                  ),
+                                ],
+                                color: kWhitePure,
+                              ),
+                              child: _backButtonAndName(vm, context)),
+                          _bodyEvolution(vm, context),
+                          Visibility(
+                            visible: vm.diagnosticString.isNotEmpty,
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: ElevatedButton(
+                                  style: buttonStyle(context),
+                                  onPressed: () {},
+                                  child: Text('REGISTRAR EVOLUCIÓN', style: bottonStyle)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox(); // Fallback if no data
+              },
+            );
+          },
+        ));
   }
 
   buttonStyle(BuildContext context, {Color color = kTernary100}) => ElevatedButton.styleFrom(
@@ -246,6 +250,7 @@ class NewEvolutionCommonWidget extends StatelessWidget {
           controller: viewModel.diagosticController,
           enableFilter: true,
           width: 285,
+          menuHeight: 250,
           requestFocusOnTap: true,
           leadingIcon: const Icon(Icons.search, color: kPrimaryColor),
           label: const Text('Nuevos Diagnosticos'),
@@ -266,29 +271,39 @@ class NewEvolutionCommonWidget extends StatelessWidget {
             },
           ).toList(),
         ) :
-        DropdownMenu<PreviusDiagnostics>(
-          controller: viewModel.diagosticController,
-          enableFilter: true,
-          width: 285,
-          requestFocusOnTap: true,
-          leadingIcon: const Icon(Icons.search, color: kPrimaryColor),
-          label: const Text('Diagnosticos Previos'),
-          inputDecorationTheme: const InputDecorationTheme(
-            filled: false,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
-          ),
-          onSelected: (value) => viewModel.changeDiagnostic(value?.value ?? ''),
-          dropdownMenuEntries: PreviusDiagnostics.values.map<DropdownMenuEntry<PreviusDiagnostics>>(
-            (PreviusDiagnostics diagnosticos) {
-              return DropdownMenuEntry<PreviusDiagnostics>(
-                value: diagnosticos,
-                label: diagnosticos.value,
-              );
-            },
-          ).toList(),
+        FutureBuilder<List<Diagnostico>>(
+          future: viewModel.getDiagnosticoPrevio(), // Fetch the list of Diagnosticos
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return SizedBox(); // Show loading indicator
+            }
+            
+            return DropdownMenu<Diagnostico>(
+              controller: viewModel.diagosticController,
+              enableFilter: true,
+              width: 285,
+              menuHeight: 250,
+              requestFocusOnTap: true,
+              leadingIcon: const Icon(Icons.search, color: kPrimaryColor),
+              label: const Text('Diagnosticos Previos'),
+              inputDecorationTheme: const InputDecorationTheme(
+                filled: false,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+              ),
+              onSelected: (value) => viewModel.changeDiagnostic(value?.enfermedad ?? ''),
+              dropdownMenuEntries: snapshot.data!.map<DropdownMenuEntry<Diagnostico>>(
+                (Diagnostico diagnostico) {
+                  return DropdownMenuEntry<Diagnostico>(
+                    value: diagnostico,
+                    label: diagnostico.enfermedad, // Adjust this based on your Diagnostico model
+                  );
+                },
+              ).toList(),
+            );
+          },
         ),
         SizedBox(width: 10),
         IconButton(
