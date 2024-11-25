@@ -132,7 +132,7 @@ class HomeScreenMobile extends StatelessWidget {
 
 AppPatientSearchBar _patientSearchBar(HomeViewModel viewModel) {
   return AppPatientSearchBar(
-    onChanged: (value) => null,
+    onChanged: (value) => viewModel.reset(),
     controller: viewModel.medicoSearchController,
     hintText: 'Ingresar DNI o Pasaporte',
   );
@@ -141,14 +141,14 @@ AppPatientSearchBar _patientSearchBar(HomeViewModel viewModel) {
 Expanded _pattientList(HomeViewModel viewModel, TextStyle textStyle1, TextStyle textStyle2, {bool isDesktop = false}) {
   return Expanded(
     child: FutureBuilder<List<Paciente>>(
-      future: viewModel.pacientesRepositoryImp.getPaciente(),
+      future: viewModel.getPaciente(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator(color: kPrimaryColor));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No patients found.'));
+          return Center(child: Text('Paciente no encontrado.'));
         }
         return ListView.builder(
           itemCount: snapshot.data!.length,
