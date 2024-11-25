@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Clinica.Dominio.Entidades;
+using System.Text.RegularExpressions;
 
 namespace Clinica.Api.Utils
 {

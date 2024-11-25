@@ -30,19 +30,30 @@ namespace Clinica.Api.Services
         {
             try
             {
-                Usuario? usuario = _repositorioUsuario.GetTodos().SingleOrDefault(x => x.Email == dto.Email && x.Clave == dto.Clave);
+                Usuario? usuario = _repositorioUsuario.GetTodos().SingleOrDefault(x => x.Email == dto.Email);
 
                 if (usuario == null)
                 {
                     return new ServiceResponse(
                            ServiceStatus.ERROR,
                            StatusCodes.Status409Conflict,
-                           "Credenciales incorrectas"
+                           "Email incorrecto"
                        );
                 }
 
+                bool passwordMatch = BCrypt.Net.BCrypt.Verify(dto.Clave, usuario.Clave);
+
+                if (!passwordMatch)
+                {
+                    return new ServiceResponse(
+                           ServiceStatus.ERROR,
+                           StatusCodes.Status409Conflict,
+                           "Clave incorrecta"
+                       );
+                }
 
                 string token = _utils.GenerarJWT(usuario);
+
                 Sesion sesion = usuario.IniciarSesion(token);
 
                 _repositorioUsuario.Modificar(usuario);
@@ -63,7 +74,6 @@ namespace Clinica.Api.Services
                     ex.Message
                 );
             }
-
         }
 
         public async Task<ServiceResponse> CrearUsuario(SignUpDto dto)
@@ -100,6 +110,9 @@ namespace Clinica.Api.Services
                 }
 
                 Usuario NuevoUsuario = new Usuario(dto);
+
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Clave);
+                NuevoUsuario.Clave = hashedPassword;
 
                 _repositorioUsuario.Agregar(NuevoUsuario);
                 _repositorioUsuario.ConfirmarCambios();

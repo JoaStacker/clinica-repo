@@ -18,7 +18,8 @@ public sealed class LoginStepDefinitions
     private ISesionUtils _utilsMock;
     private UsuarioServicio _usuarioServicio;
     private LoginDto _loginDto;
-    private Sesion? _sesionResultante = null;
+    private ServiceResponse _respuesta;
+    private Sesion? _sesionResultante;
     private List<Usuario> _usuariosPreCargados;
 
     public LoginStepDefinitions()
@@ -39,7 +40,7 @@ public sealed class LoginStepDefinitions
         _usuariosPreCargados = dataTable.Rows.Select(row => new Usuario
         {
             Email = row["email"],
-            Clave = row["clave"]
+            Clave = BCrypt.Net.BCrypt.HashPassword(row["clave"])
         }).ToList();
 
         // Hacer que el repositorio retorne este usuario cuando se llame a GetConFiltro.
@@ -47,42 +48,38 @@ public sealed class LoginStepDefinitions
     }
 
     [When("el medico ingresa el email {string} y la clave {string} e inicia sesion")]
-    public async Task WhenElMedicoIngresaElEmailYLaContrasena(string email, string clave)
+    public async Task WhenElMedicoIngresaElEmailYLaContrasenaEIniciaSesion(string email, string clave)
     {
         _loginDto = new LoginDto { Email = email, Clave = clave};
 
         // Mokear la creacion del hash y token
-        _utilsMock.EncriptarSHA256(Arg.Any<string>()).Returns("mocked-hash");
         _utilsMock.GenerarJWT(Arg.Any<Usuario>()).Returns("mocked-jwt");
 
-        var respuesta = await _usuarioServicio.AuthenticateUser(_loginDto);
-
-        if (respuesta.Status == ServiceStatus.OK)
-        {
-            _sesionResultante = respuesta.Content as Sesion;
-        }
-        else
-        {
-            _sesionResultante = null;
-        }
-    }
-
-    [Then("no se debe crear una nueva sesion.")]
-    public void ThenNoDeberiaCrearseUnaNuevaSesion_()
-    {
-        Assert.Null(_sesionResultante);
+        _respuesta = await _usuarioServicio.AuthenticateUser(_loginDto);
+        Assert.NotNull(_respuesta);
     }
 
     [Then("se debe crear una sesion para el usuario con dicho email y generar un token.")]
     public void ThenDeberiaCrearseUnaSesionParaElUsuarioConDichoEmailYGenerarUnToken_()
     {
-        _repositorioUsuarioMock.Received(1).Modificar(Arg.Any<Usuario>()); // Verificar que se llamó a Modifica
-        _repositorioUsuarioMock.Received(1).ConfirmarCambios(); // Verificar que se confirmó el cambio
+        Assert.Equal(ServiceStatus.OK, _respuesta.Status);
+        Assert.NotNull(_respuesta.Content);
 
+        _sesionResultante = _respuesta.Content as Sesion;
         Assert.NotNull(_sesionResultante);
+
+        _repositorioUsuarioMock.Received(1).Modificar(Arg.Any<Usuario>());
+        _repositorioUsuarioMock.Received(1).ConfirmarCambios();
+
         Assert.NotNull(_sesionResultante.Token);
         Assert.NotEmpty(_sesionResultante.Token);
-        Assert.Equal(_sesionResultante.Usuario.Email, _loginDto.Email);
+        Assert.Equal(_loginDto.Email, _sesionResultante.Usuario.Email);
     }
 
+    [Then("no se debe crear una nueva sesion y mostrar un mensaje {string}.")]
+    public void ThenNoSeDebeCrearUnaNuevaSesionYMostrarUnMensaje_(string mensaje)
+    {
+        Assert.Equal(ServiceStatus.ERROR, _respuesta.Status);
+        Assert.Equal(mensaje, _respuesta.Message);
+    }
 }

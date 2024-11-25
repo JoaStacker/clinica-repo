@@ -92,7 +92,7 @@ namespace Clinica.Tests.BDD.Features
                         "clave"});
             table1.AddRow(new string[] {
                         "pedro@gmail.com",
-                        "1234"});
+                        "C0ding4Life$"});
 #line 8
   await testRunner.GivenAsync("que existen los siguientes usuarios medicos:", ((string)(null)), table1, "Given ");
 #line hidden
@@ -108,20 +108,20 @@ namespace Clinica.Tests.BDD.Features
             await this.TestTearDownAsync();
         }
         
-        [Xunit.SkippableTheoryAttribute(DisplayName="El medico intenta iniciar sesion con credenciales invalidas")]
+        [Xunit.SkippableTheoryAttribute(DisplayName="El medico inicia sesion con claves invalidas")]
         [Xunit.TraitAttribute("FeatureTitle", "Iniciar sesion")]
-        [Xunit.TraitAttribute("Description", "El medico intenta iniciar sesion con credenciales invalidas")]
-        [Xunit.InlineDataAttribute("santiago@gmail.com", "1234", new string[0])]
-        [Xunit.InlineDataAttribute("pedro@gmail.com", "4321", new string[0])]
-        [Xunit.InlineDataAttribute("santiago@gmail.com", "5678", new string[0])]
-        public async System.Threading.Tasks.Task ElMedicoIntentaIniciarSesionConCredencialesInvalidas(string email, string clave, string[] exampleTags)
+        [Xunit.TraitAttribute("Description", "El medico inicia sesion con claves invalidas")]
+        [Xunit.InlineDataAttribute("pedro@gmail.com", "Program4Life$", new string[0])]
+        [Xunit.InlineDataAttribute("pedro@gmail.com", "Engineer4Life$", new string[0])]
+        [Xunit.InlineDataAttribute("pedro@gmail.com", "Desgin4Life$", new string[0])]
+        public async System.Threading.Tasks.Task ElMedicoIniciaSesionConClavesInvalidas(string email, string clave, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("email", email);
             argumentsOfScenario.Add("clave", clave);
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("El medico intenta iniciar sesion con credenciales invalidas", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 12
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("El medico inicia sesion con claves invalidas", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 15
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -134,11 +134,47 @@ this.ScenarioInitialize(scenarioInfo);
 #line 7
 await this.FeatureBackgroundAsync();
 #line hidden
-#line 13
+#line 16
   await testRunner.WhenAsync(string.Format("el medico ingresa el email \"{0}\" y la clave \"{1}\" e inicia sesion", email, clave), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 14
-  await testRunner.ThenAsync("no se debe crear una nueva sesion.", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 17
+  await testRunner.ThenAsync("no se debe crear una nueva sesion y mostrar un mensaje \"Clave incorrecta\".", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [Xunit.SkippableTheoryAttribute(DisplayName="El medico inicia sesion con emails invalidos")]
+        [Xunit.TraitAttribute("FeatureTitle", "Iniciar sesion")]
+        [Xunit.TraitAttribute("Description", "El medico inicia sesion con emails invalidos")]
+        [Xunit.InlineDataAttribute("santiago@gmail.com", "C0ding4Life$", new string[0])]
+        [Xunit.InlineDataAttribute("pepe@gmail.com", "C0ding4Life$", new string[0])]
+        [Xunit.InlineDataAttribute("barbara@gmail.com", "C0ding4Life$", new string[0])]
+        public async System.Threading.Tasks.Task ElMedicoIniciaSesionConEmailsInvalidos(string email, string clave, string[] exampleTags)
+        {
+            string[] tagsOfScenario = exampleTags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("email", email);
+            argumentsOfScenario.Add("clave", clave);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("El medico inicia sesion con emails invalidos", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 25
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 7
+await this.FeatureBackgroundAsync();
+#line hidden
+#line 26
+  await testRunner.WhenAsync(string.Format("el medico ingresa el email \"{0}\" y la clave \"{1}\" e inicia sesion", email, clave), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 27
+  await testRunner.ThenAsync("no se debe crear una nueva sesion y mostrar un mensaje \"Email incorrecto\".", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -152,7 +188,7 @@ await this.FeatureBackgroundAsync();
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("El medico ingresa un email y clave validos", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 22
+#line 35
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -165,10 +201,11 @@ this.ScenarioInitialize(scenarioInfo);
 #line 7
 await this.FeatureBackgroundAsync();
 #line hidden
-#line 23
-  await testRunner.WhenAsync("el medico ingresa el email \"pedro@gmail.com\" y la clave \"1234\" e inicia sesion", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 36
+  await testRunner.WhenAsync("el medico ingresa el email \"pedro@gmail.com\" y la clave \"C0ding4Life$\" e inicia s" +
+                        "esion", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 24
+#line 37
   await testRunner.ThenAsync("se debe crear una sesion para el usuario con dicho email y generar un token.", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
