@@ -217,15 +217,5 @@ namespace Clinica.Api.Tests.Services
                 Assert.Equal(medicamentoDto.Cantidad, medicamentoReceta.Cantidad);
             }
         }
-
-        [Fact]
-        public async Task TestCrearEvolucionRecetaDigital_DeberiaRetornarErrorSiNoTieneMedicamentosOIndicaciones()
-        {
-            // Preparar
-
-            // Ejecutar
-
-            // Verificar
-        }
     }
 }
