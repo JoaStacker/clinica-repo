@@ -93,7 +93,7 @@ class NewEvolutionCommonWidget extends StatelessWidget {
               child: IconButton(
                 padding: EdgeInsets.zero,
                 color: kPrimaryColor,
-                onPressed: () => viewModel.navigationReplace(path: '/patient/$patientId'),
+                onPressed: () => viewModel.goToBack(),
                 icon: Icon(Icons.close),
               ),
             ),

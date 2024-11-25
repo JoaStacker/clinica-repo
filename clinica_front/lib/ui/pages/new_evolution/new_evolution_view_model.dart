@@ -7,10 +7,13 @@ import 'package:clinica_front/data/repository/pacientes/pacientes_repository_imp
 import 'package:clinica_front/locator.dart';
 import 'package:clinica_front/mixins/navegation_services.dart';
 import 'package:clinica_front/services/autentication.dart';
+import 'package:clinica_front/services/dialog_service/dialog_confirm_enum.dart';
+import 'package:clinica_front/services/dialog_service/dialog_service.dart';
 import 'package:flutter/material.dart';
 
 class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
   final _user = locator<AuthenticationService>().user;
+  final _dialogServices = locator<DialogService>();
 
   final _pacientesRepositoryImp = PacientesRepositoryImp();
   final _diagnosticosRepositoryImp = DiagnosticosRemoteDatasourceImp();
@@ -93,12 +96,35 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
     navigationReplace(path: '/patient/${patient.pacienteId}');
   }
 
+    void resetVariables() {
+    _isLaboratoryDelivery = false;
+    _isDigitalRecipe = false;
+    _addDiagnostic = false;
+    _diagnosticString = '';
+    _diagnosticos.clear();
+    _medicamentos.clear();
+    _obsEvol.clear();
+    _obsDelivery.clear();
+    _obsRecipe.clear();
+    _diagnosticController.clear();
+    notifyListeners();
+  }
+
   @override
   void dispose() {
-    _diagnosticController.dispose();
-    _obsEvol.dispose();
-    _obsRecipe.dispose();
-    _obsDelivery.dispose();
+    resetVariables();
     super.dispose();
+  }
+
+  void goToBack() async {
+    var result = await _dialogServices.showConfirmationDialog(
+      title: '¿Estas seguro de volver a atras? ', 
+      description: 'Perderás todos los datos cargados hasta el momento. ', 
+      positiveLabel: 'Aceptar', negativeLabel: 'Cancelar');
+
+    if(result!.confirmed == DialogConfirmEnum.positive){
+      resetVariables();
+      navigationReplace(path: '/patient/${patient.pacienteId}');
+    }
   }
 }
