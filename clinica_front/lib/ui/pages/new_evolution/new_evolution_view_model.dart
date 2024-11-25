@@ -77,6 +77,13 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
   }
 
   void saveEvolution() async {
+    final idPaciente = patient.pacienteId;
+
+    if(_addDiagnostic){
+      await _diagnosticosRepositoryImp.saveNuevoDiagnostico(idPaciente, diagnosticString);
+      _diagnosticos = await _diagnosticosRepositoryImp.getDiagnosticoPrevio(idPaciente);
+    }
+
     final diagnosticoId = _diagnosticos.firstWhere((e) => e.enfermedad == diagnosticString).diagnosticoId;
 
     final informe = _obsEvol.text;
@@ -92,8 +99,8 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
         medicamentos: _medicamentos,
         indicaciones: indicacionesReceta);
 
-    await _evolucionRepositoryImp.saveEvolution(evolution, patient.pacienteId);
-    navigationReplace(path: '/patient/${patient.pacienteId}');
+    await _evolucionRepositoryImp.saveEvolution(evolution, idPaciente);
+    navigationReplace(path: '/patient/$idPaciente');
   }
 
     void resetVariables() {
