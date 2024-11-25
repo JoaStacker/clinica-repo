@@ -58,7 +58,7 @@ builder.Services.AddDbContext<ClinicaContext>(opt => {
     opt.UseLazyLoadingProxies();
 });
 
-builder.Services.AddSingleton<ISesionUtils>();
+//builder.Services.AddSingleton<SesionUtils>();
 
 builder.Services.AddAuthentication(config =>{
     config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -88,6 +88,11 @@ builder.Services.AddAuthentication(config =>{
 //builder.Services.AddDbContext<ClinicaContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("ClinicaConnection")));
 
 // Agregar repositorio de datos.
+builder.Services.AddScoped<ISesionUtils, SesionUtils>();
+builder.Services.AddScoped<IRepositorio<Paciente>, Repositorio<Paciente>>();
+builder.Services.AddScoped<IRepositorio<Medico>, Repositorio<Medico>>();
+builder.Services.AddScoped<IRepositorio<Usuario>, Repositorio<Usuario>>();
+builder.Services.AddScoped<IRepositorio<Persona>, Repositorio<Persona>>();
 builder.Services.AddScoped<IRepositorio<EntidadBase>, Repositorio<EntidadBase>>();
 
 // Agregar sevicios.
