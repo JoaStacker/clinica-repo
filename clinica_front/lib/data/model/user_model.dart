@@ -3,16 +3,19 @@ import 'dart:convert';
 class UserModel {
   String email;
   String token;
+  int medicoId;
   
   UserModel({
     required this.email,
     required this.token,
+    required this.medicoId
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'email': email,
       'token': token,
+      'medicoId': medicoId
     };
   }
 
@@ -20,6 +23,7 @@ class UserModel {
     return UserModel(
       email: map['email'] as String,
       token: map['token'] as String,
+      medicoId: map['medicoId'] as int
     );
   }
 
@@ -29,6 +33,7 @@ class UserModel {
 
   static final empty = UserModel(
       email: '',
-      token: ''
+      token: '',
+      medicoId: 0
   );
 }

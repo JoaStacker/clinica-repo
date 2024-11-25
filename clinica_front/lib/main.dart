@@ -7,8 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
+
+  // Inicializamos el AuthenticationService
+  await locator<AuthenticationService>().initializeUser();
+
   runApp(const CentroClinico());
 }
 
@@ -17,38 +22,30 @@ class CentroClinico extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: locator<AuthenticationService>().getToken(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError || !snapshot.hasData) {
-          return const Center(child: Text('Error loading authentication status'));
+    final authService = locator<AuthenticationService>();
+
+    final localRouter = GoRouter(
+      navigatorKey: NavigatorKey().key,
+      initialLocation: authService.user.token.isEmpty ? '/login' : '/home',
+      redirect: (context, state) {
+        final loggingIn = state.fullPath == '/login';
+        final isAuthenticated = authService.user.token.isNotEmpty;
+
+        if (!isAuthenticated && !loggingIn) {
+          return '/login';
         }
-
-        final isAuthenticated = snapshot.data!;
-        final localRouter = GoRouter(
-          navigatorKey: NavigatorKey().key,
-          initialLocation: isAuthenticated.isEmpty? '/login' : '/home',
-          redirect: (context, state) {
-            final loggingIn = state.fullPath == '/login';
-            if (isAuthenticated.isEmpty && loggingIn) {
-              return '/login';
-            }
-            return null;
-          },
-          routes: router,
-        );
-
-        return MultiProvider(
-          providers: routerViewModel,
-          child: MaterialApp.router(
-            routerConfig: localRouter,
-            debugShowCheckedModeBanner: false,
-            title: 'Centro Clínico',
-          ),
-        );
+        return null; // No redirige si no hay conflictos
       },
+      routes: router, // Tu configuración de rutas
+    );
+
+    return MultiProvider(
+      providers: routerViewModel, // Tu lista de proveedores
+      child: MaterialApp.router(
+        routerConfig: localRouter,
+        debugShowCheckedModeBanner: false,
+        title: 'Centro Clínico',
+      ),
     );
   }
 }
