@@ -6,139 +6,216 @@ using Clinica.Infraestructura.Datos;
 using Clinica.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
+using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Http;
+using Azure;
 
 namespace Clinica.Api.Tests.Services
 {
     public class SistemaServicioTest
     {
-        private readonly IQueryable<Paciente> _dbSetMock;
-        private readonly ClinicaContext _contextMock;
-        private readonly IRepositorio<Paciente> _repositorioMock;
+        private readonly IRepositorio<Paciente> _repositorioPacienteMock;
+        private readonly IRepositorio<Medico> _repositorioMedicoMock;
         private readonly SistemaServicio _sistemaServicio;
 
         public SistemaServicioTest()
         {
-            var pacientesMock = new List<Paciente>
-            {
-                new Paciente { PacienteID = 1, Persona = new Persona { Dni = "12345678", NombreApellido = "Juan Perez" } },
-                new Paciente { PacienteID = 2, Persona = new Persona { Dni = "87654321", NombreApellido = "Ana Lopez" } }
-            };
-
-            _dbSetMock = Substitute.For<DbSet<Paciente>, IQueryable<Paciente>>();
-            _dbSetMock.Provider.Returns(pacientesMock.AsQueryable().Provider);
-            _dbSetMock.Expression.Returns(pacientesMock.AsQueryable().Expression);
-            _dbSetMock.ElementType.Returns(pacientesMock.AsQueryable().ElementType);
-            _dbSetMock.GetEnumerator().Returns(pacientesMock.GetEnumerator());
-
-            _contextMock = Substitute.For<ClinicaContext>(new DbContextOptions<ClinicaContext>());
-            _contextMock.Pacientes.Returns(_dbSetMock); 
-            
-            _repositorioMock = Substitute.For<IRepositorio<Paciente>>();
-            _sistemaServicio = new SistemaServicio(_contextMock);
+            _repositorioPacienteMock = Substitute.For<IRepositorio<Paciente>>();
+            _repositorioMedicoMock = Substitute.For<IRepositorio<Medico>>();
+            _sistemaServicio = new SistemaServicio(_repositorioPacienteMock, _repositorioMedicoMock);
         }
 
         [Fact]
-        public async Task ListarPacientes_DeberiaRetornarExito()
-        {
-            // Preparar: Crear una lista de pacientes mockeada
-            var pacientesMock = new List<Paciente>
-            {
-                new Paciente { PacienteID = 1, Persona = new Persona { Dni = "12345678", NombreApellido = "Juan Perez" } },
-                new Paciente { PacienteID = 2, Persona = new Persona { Dni = "87654321", NombreApellido = "Ana Lopez" } }
-            };
-
-            _repositorioMock.GetTodos().Returns(pacientesMock); // Configuración con NSubstitute
-
-            // Ejecutar: Llamar al método del servicio
-            var response = await _sistemaServicio.listarPacientes();
-
-            // Verificar: Verificar que la respuesta es exitosa y contiene los pacientes esperados
-            Assert.Equal(ServiceStatus.OK, response.Status);
-            var pacientes = (List<Paciente>)response.Content;
-            Assert.NotNull(pacientes);
-            Assert.Equal(2, pacientes.Count);
-            Assert.Equal("Juan Perez", pacientes[0].Persona.NombreApellido);
-        }
-
-        [Fact]
-        public async Task CrearPaciente_DeberiaCrearPacienteCorrectamente()
+        public async Task TestCrearEvolucionConTextoSimple_DeberiaCrearEvolucionCorrectamente()
         {
             // Preparar
-            var pacienteDto = new PacienteDto
+            var paciente = new Paciente(new PacienteDto { Dni = "12345678", NombreApellido = "Juan Perez" });
+            Diagnostico diagnostico = new Diagnostico("Angina", "Enfermedad gripal");
+            diagnostico.DiagnosticoID = 1;
+            paciente.HistoriaClinica.Diagnosticos.Add(diagnostico);
+            var medico = new Medico(new MedicoDto { Matricula = 1234, NombreApellido = "Dr. Perez" });
+            medico.MedicoID = 1;
+            var evolucionDto = new EvolucionDto
             {
-                Dni = "12345678",
-                NombreApellido = "Juan Perez",
-                FechaNacimiento = new DateTime(1980, 1, 1),
-                Email = "juan.perez@example.com"
+                MedicoId = 1,
+                DiagnosticoId = 1,
+                Informe = "Informe de evolución",
             };
-            
-            _repositorioMock.GetConFiltro(Arg.Any<Expression<Func<Paciente, bool>>>()).Returns(Enumerable.Empty<Paciente>()); // No existe un paciente con ese Dni
+
+            _repositorioPacienteMock.Get(1).Returns(paciente);
+            _repositorioMedicoMock.Get(1).Returns(medico);
 
             // Ejecutar
-            var response = await _sistemaServicio.crearPaciente(pacienteDto);
+            var response = await _sistemaServicio.crearEvolucion(1, evolucionDto);
 
             // Verificar
-            Assert.Equal(ServiceStatus.OK, response.Status);
-            _repositorioMock.Received(1).Agregar(Arg.Any<Paciente>()); // Verificar que se llamó a Agregar
-            _repositorioMock.Received(1).ConfirmarCambios(); // Verificar que se confirmó el cambio
+            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            Assert.Equal("Evolucion creada con éxito", response.Message);
+
+            Assert.Single(paciente.HistoriaClinica.Diagnosticos.First().EvolucionesClinicas);
+            EvolucionClinica evolucion = paciente.HistoriaClinica.Diagnosticos.First().EvolucionesClinicas.First();
+
+            Assert.Equal(evolucionDto.Informe, evolucion.Informe);
+            Assert.Equal(evolucionDto.MedicoId, evolucion.MedicoID);
+            Assert.Null(evolucion.PedidoLaboratorio);
+            Assert.Null(evolucion.RecetaDigital);
         }
 
         [Fact]
-        public async Task CrearPaciente_DeberiaRetornarErrorSiPacienteYaExiste()
+        public async Task TestCrearEvolucionConTextoSimple_DeberiaRetornarErrorSiElTextoEstaVacio()
         {
             // Preparar
-            var pacienteDto = new PacienteDto { Dni = "12345678" };
+            var paciente = new Paciente(new PacienteDto { Dni = "12345678", NombreApellido = "Juan Perez" });
+            Diagnostico diagnostico = new Diagnostico("Angina", "Enfermedad gripal");
+            diagnostico.DiagnosticoID = 1;
+            paciente.HistoriaClinica.Diagnosticos.Add(diagnostico);
+            var medico = new Medico(new MedicoDto { Matricula = 1234, NombreApellido = "Dr. Perez" });
+            var evolucionDto = new EvolucionDto
+            {
+                MedicoId = 1,
+                DiagnosticoId = 1,
+                Informe = "",
+            };
 
-            _repositorioMock.GetConFiltro(Arg.Any<System.Linq.Expressions.Expression<Func<Paciente,bool>>>()).Returns(new List<Paciente> { new Paciente() });
+            _repositorioPacienteMock.Get(1).Returns(paciente);
+            _repositorioMedicoMock.Get(1).Returns(medico);
 
             // Ejecutar
-            var response = await _sistemaServicio.crearPaciente(pacienteDto);
+            var response = await _sistemaServicio.crearEvolucion(1, evolucionDto);
 
             // Verificar
-            Assert.Equal(ServiceStatus.ERROR, response.Status);
-            Assert.Equal("El paciente ya existe", response.Message);
+            Assert.Equal(StatusCodes.Status500InternalServerError, response.StatusCode);
+            Assert.Equal("El texto de la evolucion no debe estar vacio.", response.Message);
+
+            Assert.Empty(paciente.HistoriaClinica.Diagnosticos.First().EvolucionesClinicas);
         }
 
         [Fact]
-        public async Task ObtenerHistoriaClinicaConEvoluciones_DeberiaRetornarHistoriaClinicaConEvoluciones()
+        public async Task TestCrearEvolucionConPedidoLaboratorio_DeberiaCrearEvolucionCorrectamente()
         {
             // Preparar
-            var paciente = new Paciente
+            var paciente = new Paciente(new PacienteDto { Dni = "12345678", NombreApellido = "Juan Perez" });
+            paciente.PacienteID = 1;
+            Diagnostico diagnostico = new Diagnostico("Angina", "Enfermedad gripal");
+            diagnostico.DiagnosticoID = 1;
+            paciente.HistoriaClinica.Diagnosticos.Add(diagnostico);
+            var medico = new Medico(new MedicoDto { Matricula = 1234, NombreApellido = "Dr. Perez" });
+            medico.MedicoID = 1;
+            var evolucionDto = new EvolucionDto
             {
-                PacienteID = 1,
-                Persona = new Persona { Dni = "12345678", NombreApellido = "Juan Perez" },
-                HistoriaClinica = new HistoriaClinica
-                {
-                    Diagnosticos = new List<Diagnostico>
-                    {
-                        new Diagnostico
-                        {
-                            DiagnosticoID = 1,
-                            Enfermedad = "Conjuntivitis",
-                            EvolucionesClinicas = new List<EvolucionClinica>
-                            {
-                                new EvolucionClinica
-                                {
-                                    Informe = "Informe de evolución",
-                                    FechaDeCreacion = DateTime.Now,
-                                }
-                            }
-                        }
-                    }
-                }
+                MedicoId = 1,
+                DiagnosticoId = 1,
+                Informe = "Informe de evolución",
+                TextoPedido = "Examen de sangre"
             };
 
-            _repositorioMock.Get(1).Returns(paciente); 
+            _repositorioPacienteMock.Get(1).Returns(paciente);
+            _repositorioMedicoMock.Get(1).Returns(medico);
 
             // Ejecutar
-            var response = await _sistemaServicio.ObtenerHistoriaClinicaConEvoluciones(1);
+            var response = await _sistemaServicio.crearEvolucion(1, evolucionDto);
 
             // Verificar
-            Assert.Equal(ServiceStatus.OK, response.Status);
-            var historia = ((dynamic)response.Content).historiaClinica;
-            Assert.NotNull(historia);
-            Assert.Equal("Conjuntivitis", historia.First().enfermedad);
-            Assert.Equal("Análisis de sangre", historia.First().evoluciones.First().TextoPedido);
+            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            Assert.Equal("Evolucion creada con éxito", response.Message);
+
+            Assert.Single(paciente.HistoriaClinica.Diagnosticos.First().EvolucionesClinicas);
+
+            EvolucionClinica evolucion = paciente.HistoriaClinica.Diagnosticos.First().EvolucionesClinicas.First();
+
+            Assert.Equal(evolucionDto.Informe, evolucion.Informe);
+            Assert.Equal(evolucionDto.MedicoId, evolucion.MedicoID);
+
+            Assert.NotNull(evolucion.PedidoLaboratorio);
+            Assert.Equal(evolucionDto.TextoPedido, evolucion.PedidoLaboratorio.TextoLibre);
+
+            Assert.Null(evolucion.RecetaDigital);
+        }
+
+        [Fact]
+        public async Task TestCrearEvolucionConPedidoLaboratorio_DeberiaRetornarErrorSiElTextoEstaVacio()
+        {
+            // Preparar
+            var paciente = new Paciente(new PacienteDto { Dni = "12345678", NombreApellido = "Juan Perez" });
+            paciente.PacienteID = 1;
+            Diagnostico diagnostico = new Diagnostico("Angina", "Enfermedad gripal");
+            diagnostico.DiagnosticoID = 1;
+            paciente.HistoriaClinica.Diagnosticos.Add(diagnostico);
+            var medico = new Medico(new MedicoDto { Matricula = 1234, NombreApellido = "Dr. Perez" });
+            medico.MedicoID = 1;
+            var evolucionDto = new EvolucionDto
+            {
+                MedicoId = 1,
+                DiagnosticoId = 1,
+                Informe = "Informe de evolución",
+                TextoPedido = ""
+            };
+
+            _repositorioPacienteMock.Get(1).Returns(paciente);
+            _repositorioMedicoMock.Get(1).Returns(medico);
+
+            // Ejecutar
+            var response = await _sistemaServicio.crearEvolucion(1, evolucionDto);
+
+            // Verificar
+            Assert.Equal(StatusCodes.Status500InternalServerError, response.StatusCode);
+            Assert.Equal("El texto del pedido de laboratorio no debe estar vacio.", response.Message);
+
+            Assert.Empty(paciente.HistoriaClinica.Diagnosticos.First().EvolucionesClinicas);
+        }
+
+        [Fact]
+        public async Task TestCrearEvolucionRecetaDigital_DeberiaCrearEvolucionCorrectamente()
+        {
+            // Preparar
+            var paciente = new Paciente(new PacienteDto { Dni = "12345678", NombreApellido = "Juan Perez" });
+            paciente.PacienteID = 1;
+            Diagnostico diagnostico = new Diagnostico("Angina", "Enfermedad gripal");
+            diagnostico.DiagnosticoID = 1;
+            paciente.HistoriaClinica.Diagnosticos.Add(diagnostico);
+            var medico = new Medico(new MedicoDto { Matricula = 1234, NombreApellido = "Dr. Perez" });
+            medico.MedicoID = 1;
+            var evolucionDto = new EvolucionDto
+            {
+                MedicoId = 1,
+                DiagnosticoId = 1,
+                Informe = "Informe de evolución",
+                Medicamentos = new List<MedicamentoDto> {
+                    { new MedicamentoDto("123","Ibuprofeno", 1) }
+                },
+                Indicaciones = "Indicaciones"
+            };
+
+            _repositorioPacienteMock.Get(1).Returns(paciente);
+            _repositorioMedicoMock.Get(1).Returns(medico);
+
+            // Ejecutar
+            var response = await _sistemaServicio.crearEvolucion(1, evolucionDto);
+
+            // Verificar
+            Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+            Assert.Equal("Evolucion creada con éxito", response.Message);
+
+            Assert.Single(paciente.HistoriaClinica.Diagnosticos.First().EvolucionesClinicas);
+
+            EvolucionClinica evolucion = paciente.HistoriaClinica.Diagnosticos.First().EvolucionesClinicas.First();
+
+            Assert.Equal(evolucionDto.Informe, evolucion.Informe);
+            Assert.Equal(evolucionDto.MedicoId, evolucion.MedicoID);
+
+            Assert.NotNull(evolucion.RecetaDigital);
+            Assert.Equal(evolucionDto.Medicamentos.Count, evolucion.RecetaDigital.Medicamentos.Count);
+
+            var medicamentosReceta = evolucion.RecetaDigital.Medicamentos.ToList();
+            for (int i = 0; i < medicamentosReceta.Count; i++)
+            {
+                var medicamentoReceta = medicamentosReceta[i];
+                var medicamentoDto = evolucionDto.Medicamentos[i];
+
+                Assert.Equal(medicamentoDto.Codigo, medicamentoReceta.Codigo);
+                Assert.Equal(medicamentoDto.NombreComercial, medicamentoReceta.NombreComercial);
+                Assert.Equal(medicamentoDto.Cantidad, medicamentoReceta.Cantidad);
+            }
         }
     }
 }

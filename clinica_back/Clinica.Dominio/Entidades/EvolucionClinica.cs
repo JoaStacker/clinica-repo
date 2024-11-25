@@ -51,8 +51,8 @@ namespace Clinica.Dominio.Entidades
         {
             Informe = informe;
             FechaDeCreacion = DateTime.Now;
-            // Medico = medico;
-            MedicoID = medico.MedicoID;  
+            Medico = medico;
+            MedicoID = medico.MedicoID;
         }
 
         public void ConPedidoLaboratorio(string textoPedidoLaboratorio)

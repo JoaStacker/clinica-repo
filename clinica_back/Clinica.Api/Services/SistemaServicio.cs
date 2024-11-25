@@ -10,11 +10,12 @@ namespace Clinica.Api.Services
         IRepositorio<Paciente> _repositorioPaciente;
         IRepositorio<Medico> _repositorioMedico;
 
-        public SistemaServicio(ClinicaContext context)
+        public SistemaServicio(IRepositorio<Paciente> repositorioPaciente, IRepositorio<Medico> repositorioMedico)
         {
-            _repositorioPaciente = new Repositorio<Paciente>(context);
-            _repositorioMedico = new Repositorio<Medico>(context);
+            _repositorioPaciente = repositorioPaciente;
+            _repositorioMedico = repositorioMedico;
         }
+
         public async Task<ServiceResponse> listarPacientes()
         {
             try

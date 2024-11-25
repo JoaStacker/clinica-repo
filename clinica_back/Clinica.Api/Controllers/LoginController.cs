@@ -14,34 +14,23 @@ namespace Clinica.Api.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private Clinica.Api.Utils.Utils _utilidades;
         private readonly IUsuarioServicio _servicioUsuario;
-        public LoginController(IUsuarioServicio servicio, Clinica.Api.Utils.Utils utilidades)
+        public LoginController(IUsuarioServicio servicio)
         {
             _servicioUsuario = servicio;
-            _utilidades = utilidades;
         }
         
         
        [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginDto usuario)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var usuarioCredentials = await _servicioUsuario.AuthenticateUser(usuario);
-            if (usuarioCredentials == null) 
+            var sesion = await _servicioUsuario.AuthenticateUser(loginDto);
+            if (sesion == null) 
             { 
                 return Unauthorized("Las credenciales son incorrectas"); 
             }
 
-            var tokens = _utilidades.generarJWT(usuarioCredentials);
-
-            var user = new 
-            {
-                Email = usuarioCredentials.Email,
-                MedicoId = usuarioCredentials.Medico.MedicoID,
-                Token = tokens
-            };
-
-            return Ok(user);
+            return Ok(sesion);
         }
 
     }

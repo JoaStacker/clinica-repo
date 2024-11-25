@@ -1,27 +1,79 @@
 ﻿
 using Clinica.Dominio.Dtos;
 using Clinica.Dominio.Entidades;
-using Clinica.Infraestructura.Datos;
-using Microsoft.EntityFrameworkCore;
+using Clinica.Dominio.Contratos;
+using Clinica.Api.Utils;
 
 namespace Clinica.Api.Services
 {
     public class UsuarioServicio : IUsuarioServicio
     {
-        Repositorio<Usuario> _repositorioUsuario;
-        Repositorio<Medico> _repositorioMedico;
-        Repositorio<Persona> _repositorioPersona;
+        ISesionUtils _utils;
+        IRepositorio<Usuario> _repositorioUsuario;
+        IRepositorio<Medico> _repositorioMedico;
+        IRepositorio<Persona> _repositorioPersona;
 
-        public UsuarioServicio(ClinicaContext context)
+        public UsuarioServicio(
+            IRepositorio<Usuario> repositorioUsuario,
+            IRepositorio<Medico> repositorioMedico,
+            IRepositorio<Persona> repositorioPersona,
+            ISesionUtils utils
+)
         {
-            _repositorioUsuario = new Repositorio<Usuario>(context);
-            _repositorioMedico = new Repositorio<Medico>(context);
-            _repositorioPersona = new Repositorio<Persona>(context);
+            _repositorioUsuario = repositorioUsuario;
+            _repositorioMedico = repositorioMedico;
+            _repositorioPersona = repositorioPersona;
+            _utils = utils;
         }
 
-        public async Task<Usuario?> AuthenticateUser(LoginDto dto)
-        {            
-            return _repositorioUsuario.GetTodos().SingleOrDefault(x => x.Email == dto.Email && x.Clave == dto.Clave);
+        public async Task<ServiceResponse> AuthenticateUser(LoginDto dto)
+        {
+            try
+            {
+                Usuario? usuario = _repositorioUsuario.GetTodos().SingleOrDefault(x => x.Email == dto.Email);
+
+                if (usuario == null)
+                {
+                    return new ServiceResponse(
+                           ServiceStatus.ERROR,
+                           StatusCodes.Status409Conflict,
+                           "Email incorrecto"
+                       );
+                }
+
+                bool passwordMatch = BCrypt.Net.BCrypt.Verify(dto.Clave, usuario.Clave);
+
+                if (!passwordMatch)
+                {
+                    return new ServiceResponse(
+                           ServiceStatus.ERROR,
+                           StatusCodes.Status409Conflict,
+                           "Clave incorrecta"
+                       );
+                }
+
+                string token = _utils.GenerarJWT(usuario);
+
+                Sesion sesion = usuario.IniciarSesion(token);
+
+                _repositorioUsuario.Modificar(usuario);
+                _repositorioUsuario.ConfirmarCambios();
+
+                return new ServiceResponse(
+                        ServiceStatus.OK,
+                        StatusCodes.Status200OK,
+                        "Sesion creada con exito",
+                        sesion
+                    );
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse(
+                    ServiceStatus.ERROR,
+                    StatusCodes.Status500InternalServerError,
+                    ex.Message
+                );
+            }
         }
 
         public async Task<ServiceResponse> CrearUsuario(SignUpDto dto)
@@ -58,6 +110,9 @@ namespace Clinica.Api.Services
                 }
 
                 Usuario NuevoUsuario = new Usuario(dto);
+
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Clave);
+                NuevoUsuario.Clave = hashedPassword;
 
                 _repositorioUsuario.Agregar(NuevoUsuario);
                 _repositorioUsuario.ConfirmarCambios();

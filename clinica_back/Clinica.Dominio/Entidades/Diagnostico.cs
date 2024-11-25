@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Clinica.Dominio.Dtos;
 using System.Text.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Clinica.Dominio.Entidades
 {
@@ -44,14 +45,22 @@ namespace Clinica.Dominio.Entidades
 
         public void agregarEvolucion(EvolucionDto evolucionDto, Medico medico)
         {
+            if (evolucionDto.Informe.IsNullOrEmpty())
+            {
+                throw new Exception("El texto de la evolucion no debe estar vacio.");
+            }
             EvolucionClinica evolucion = new EvolucionClinica(evolucionDto.Informe, medico);
-            
+
             // Con Pedido de Laboratorio.
-            if (!string.IsNullOrEmpty(evolucionDto.TextoPedido))
+            if (evolucionDto.TextoPedido != null && string.IsNullOrEmpty(evolucionDto.TextoPedido))
+            {
+                throw new Exception("El texto del pedido de laboratorio no debe estar vacio.");
+            }
+            else if (evolucionDto.TextoPedido != null)
             {
                 evolucion.ConPedidoLaboratorio(evolucionDto.TextoPedido);
             }
-            
+
             // Con Receta Digital.
             if (evolucionDto.Medicamentos != null && 
                 evolucionDto.Medicamentos.Count > 0 && 
