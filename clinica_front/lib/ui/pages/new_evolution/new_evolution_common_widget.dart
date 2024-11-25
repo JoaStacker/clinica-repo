@@ -63,7 +63,7 @@ class NewEvolutionCommonWidget extends StatelessWidget {
                               padding: EdgeInsets.all(20),
                               child: ElevatedButton(
                                   style: buttonStyle(context),
-                                  onPressed: () {},
+                                  onPressed: () => vm.saveEvolution(),
                                   child: Text('REGISTRAR EVOLUCIÓN', style: bottonStyle)),
                             ),
                           ),

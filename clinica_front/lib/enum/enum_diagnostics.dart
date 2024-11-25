@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 enum NewDiagnostics {
   A011('Fiebre paratifoidea a'),
   A012('Fiebre paratifoidea b'),

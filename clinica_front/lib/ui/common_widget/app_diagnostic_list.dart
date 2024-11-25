@@ -115,7 +115,7 @@ class _DiagnosticCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Evolución N°: ${index + 1}', //TODO:: PONER TIPO DE EVOLUCION
+                  'Evolución N°: ${index + 1}',
                   style: textBlackStyle24,
                 ),
                 Column(
