@@ -1,5 +1,6 @@
 import 'package:clinica_front/data/datasources/evolucion/evolucion_remote_datasource.dart';
 import 'package:clinica_front/data/model/evolucion_request.dart';
+import 'package:clinica_front/data/model/medicamento_api_salud.dart';
 import 'package:clinica_front/domain/repository/evolucion_repository.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,4 +14,9 @@ class EvolucionRepositoryImp extends EvolucionRepository {
     return response;
   }
 
+  @override
+  Future<List<MedicamentoApiSalud>> getMedicamentosApiSalud() async {
+    return await _evolucionRemoteDatasourceImp.getMedicamentosApiSalud();
+  }
+  
 }

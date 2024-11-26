@@ -8,8 +8,8 @@
             "args": [
                 "-d",
                 "edge",
-                "--web-renderer",
-                "html"
+                "--web-browser-flag",
+                "--disable-web-security"
             ]
         }
     ]

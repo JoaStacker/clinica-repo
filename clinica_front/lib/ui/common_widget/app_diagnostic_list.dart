@@ -131,6 +131,8 @@ class _DiagnosticCard extends StatelessWidget {
             Text('Informe: ${evolucion.informe}', style: textBlackStyle14),
             if(evolucion.textoPedido != null) 
               Text('Pedido de Laboratorio: ${evolucion.textoPedido}', style: textBlackStyle14),
+            if(evolucion.indicacionesReceta != null)
+              Text('Informe Receta Digital: ${evolucion.indicacionesReceta}', style: textBlackStyle14),
           ],
         );
       }),

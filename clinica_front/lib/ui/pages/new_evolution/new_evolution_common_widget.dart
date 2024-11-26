@@ -183,7 +183,8 @@ class NewEvolutionCommonWidget extends StatelessWidget {
               onPressed: () => viewModel.changeDigitalRecipe(),
               child: Text('Receta Digital', style: bottonStyle)),
           SizedBox(height: 10),
-          Visibility(visible: viewModel.isDigitalRecipe, child: MedicationListScreen()),
+          Visibility(visible: viewModel.isDigitalRecipe, 
+            child: MedicationListScreen(viewModel: viewModel)),
           SizedBox(height: 10),
           Visibility(
             visible: viewModel.isDigitalRecipe,

@@ -1,6 +1,7 @@
 import 'package:clinica_front/data/datasources/diagnosticos/diagnosticos_remote_datasource.dart';
 import 'package:clinica_front/data/model/diagnostico.dart';
 import 'package:clinica_front/data/model/evolucion_request.dart';
+import 'package:clinica_front/data/model/medicamento_api_salud.dart';
 import 'package:clinica_front/data/model/paciente.dart';
 import 'package:clinica_front/data/repository/evolucion/evolucion_repository_imp.dart';
 import 'package:clinica_front/data/repository/pacientes/pacientes_repository_imp.dart';
@@ -17,7 +18,7 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
 
   final _pacientesRepositoryImp = PacientesRepositoryImp();
   final _diagnosticosRepositoryImp = DiagnosticosRemoteDatasourceImp();
-  final _evolucionRepositoryImp = EvolucionRepositoryImp();
+  final evolucionRepositoryImp = EvolucionRepositoryImp();
 
   final TextEditingController _obsEvol = TextEditingController();
   TextEditingController get obsEvol => _obsEvol;
@@ -27,8 +28,13 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
   TextEditingController get obsRecipe => _obsRecipe;
   final TextEditingController _diagnosticController = TextEditingController();
   TextEditingController get diagosticController => _diagnosticController;
+
+  final TextEditingController _medicamentoController = TextEditingController();
+  TextEditingController get medicamentoController => _medicamentoController;
+
   late Paciente _patient;
   Paciente get patient => _patient;
+
   bool _isLaboratoryDelivery = false;
   bool get isLaboratoryDelivery => _isLaboratoryDelivery;
   bool _isDigitalRecipe = false;
@@ -38,10 +44,21 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
   String _diagnosticString = '';
   String get diagnosticString => _diagnosticString;
 
+  bool _isEditRecipe = false;
+  bool get isEditRecipe => _isEditRecipe;
+
+  MedicamentoApiSalud? _medicamentoApiSalud;
+  MedicamentoApiSalud? get medicamentoApiSalud => _medicamentoApiSalud;
+  int _cantidadMedicamento = 0;
+  int get cantidadMedicamento => _cantidadMedicamento;
+
+  int _indexEdit = 0;
+  int get indexEdit => _indexEdit;
+
   List<Diagnostico> _diagnosticos = [];
   List<Diagnostico> get diagnostico => _diagnosticos;
 
-  List<Medicamento> _medicamentos = [];
+  final List<Medicamento> _medicamentos = [];
   List<Medicamento> get medicamentos => _medicamentos;
 
   Future<Paciente> getPatient(String patientId) async {
@@ -71,15 +88,49 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
     notifyListeners();
   }
 
+  void changeMedicament(MedicamentoApiSalud value) {
+    _medicamentoApiSalud = value;
+    notifyListeners();
+  }
+
+  void changeCantidadMedicamento(int value) {
+    _cantidadMedicamento = value;
+    notifyListeners();
+  }
+
   void addNewDiagnostic() {
     _addDiagnostic = !_addDiagnostic;
     notifyListeners();
   }
 
+  void addReceta() {
+    _medicamentos.add(Medicamento(
+        codigo: _medicamentoApiSalud?.codigo.toString() ?? '',
+        nombreComercial: '${_medicamentoApiSalud?.descripcion} ${_medicamentoApiSalud?.formato}',
+        cantidad: _cantidadMedicamento));
+    notifyListeners();
+  }
+
+  void editReceta(int index){
+    _isEditRecipe = true;
+    _indexEdit = index;
+    notifyListeners();
+  }
+
+  void editMedicaments(){
+    _isEditRecipe = false;
+    _medicamentoController.text = _medicamentos[_indexEdit].nombreComercial;
+    _medicamentos[_indexEdit] = Medicamento(
+        codigo: _medicamentoApiSalud?.codigo.toString() ?? '',
+        nombreComercial: '${_medicamentoApiSalud?.descripcion} ${_medicamentoApiSalud?.formato}',
+        cantidad: _cantidadMedicamento);
+  }
+
+
   void saveEvolution() async {
     final idPaciente = patient.pacienteId;
 
-    if(_addDiagnostic){
+    if (_addDiagnostic) {
       await _diagnosticosRepositoryImp.saveNuevoDiagnostico(idPaciente, diagnosticString);
       _diagnosticos = await _diagnosticosRepositoryImp.getDiagnosticoPrevio(idPaciente);
     }
@@ -99,11 +150,12 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
         medicamentos: _medicamentos,
         indicaciones: indicacionesReceta);
 
-    await _evolucionRepositoryImp.saveEvolution(evolution, idPaciente);
+    await evolucionRepositoryImp.saveEvolution(evolution, idPaciente);
+    resetVariables();
     navigationReplace(path: '/patient/$idPaciente');
   }
 
-    void resetVariables() {
+  void resetVariables() {
     _isLaboratoryDelivery = false;
     _isDigitalRecipe = false;
     _addDiagnostic = false;
@@ -113,6 +165,7 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
     _obsEvol.clear();
     _obsDelivery.clear();
     _obsRecipe.clear();
+    _medicamentoController.clear();
     _diagnosticController.clear();
     notifyListeners();
   }
@@ -125,11 +178,12 @@ class NewEvolutionViewModel extends ChangeNotifier with NavegationServices {
 
   void goToBack() async {
     var result = await _dialogServices.showConfirmationDialog(
-      title: '¿Estas seguro de volver a atras? ', 
-      description: 'Perderás todos los datos cargados hasta el momento. ', 
-      positiveLabel: 'Aceptar', negativeLabel: 'Cancelar');
+        title: '¿Estas seguro de volver a atras? ',
+        description: 'Perderás todos los datos cargados hasta el momento. ',
+        positiveLabel: 'Aceptar',
+        negativeLabel: 'Cancelar');
 
-    if(result!.confirmed == DialogConfirmEnum.positive){
+    if (result!.confirmed == DialogConfirmEnum.positive) {
       resetVariables();
       navigationReplace(path: '/patient/${patient.pacienteId}');
     }
