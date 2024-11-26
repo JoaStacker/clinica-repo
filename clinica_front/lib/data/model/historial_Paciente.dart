@@ -82,7 +82,7 @@ class Evoluciones {
     String informe;
     DateTime fechaCreacion;
     String? textoPedido;
-    dynamic indicacionesReceta;
+    String? indicacionesReceta;
 
     Evoluciones({
         required this.medico,
@@ -109,7 +109,7 @@ class Evoluciones {
       informe: map['informe'] as String,
       fechaCreacion: DateTime.parse(map['fechaCreacion'] as String),
       textoPedido: map['textoPedido'] as String?,
-      indicacionesReceta: map['indicacionesReceta'] as dynamic,
+      indicacionesReceta: map['indicacionesReceta'] as String?,
     );
   }
 
